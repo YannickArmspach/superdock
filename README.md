@@ -66,21 +66,21 @@ $ superdock deploy production
 ## Sync from*
 > Sync database and media from (staging/preproduction/production) to local
 ```sh
-$ superdock sync from staging
+$ superdock sync --from staging
 
-$ superdock sync from preproduction
+$ superdock sync --from preproduction
 
-$ superdock sync from production
+$ superdock sync --from production
 ```
 
 ## Sync to*
 > Sync database and media from local to (staging/preproduction/production)
 ```sh
-$ superdock sync to staging
+$ superdock sync --to staging
 
-$ superdock sync to preproduction
+$ superdock sync --to preproduction
 
-$ superdock sync to production
+$ superdock sync --to production
 ```
 
 ##### * require access by ssh key. Send your public key to server admin of the project.
