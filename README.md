@@ -1,5 +1,7 @@
 # SUPERDOCK
 CLI PROJECT MANAGER
+ 
+local environment for symfony, drupal and wordpress, synchronize directories and databases from/to and deploy code with version management
 
 # Install
 
