@@ -1,0 +1,161 @@
+version: "3.7"
+
+services:
+
+  webserver:
+    build:
+      context: ./../
+      dockerfile: ./docker/Dockerfile
+    container_name: superdock_webserver
+    restart: 'always'
+    stdin_open: false
+    tty: true
+    networks:
+      - superdock_network
+    depends_on:
+      - database
+      - elasticsearch
+    ports:
+      - 80:80
+      - 443:443
+      # - 9200:9200
+    expose:
+      - 80
+      - 443
+      - 9200
+    links:
+      - database
+      - elasticsearch
+      # - mercure
+      # - redis
+    volumes:
+      - ${SUPERDOCK_PROJECT_DIR}/:/var/www/html
+      - ${SUPERDOCK_PROJECT_DIR}/superdock/certificate/${SUPERDOCK_LOCAL_DOMAIN}:/etc/ssl/certs
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: ${SUPERDOCK_LOCAL_DB_USER}
+      MYSQL_PASSWORD: ${SUPERDOCK_LOCAL_DB_PASS}
+      MYSQL_DATABASE: ${SUPERDOCK_LOCAL_DB_NAME}
+      SUPERDOCK_LOCAL_DIR: ${SUPERDOCK_LOCAL_DIR}
+      SUPERDOCK_LOCAL_DOMAIN: ${SUPERDOCK_LOCAL_DOMAIN}
+
+  database:
+    image: mysql:8
+    container_name: superdock_database
+    restart: 'always'
+    stdin_open: false
+    tty: true
+    networks:
+      - superdock_network
+    ports:
+      - 3306:3306
+    volumes:
+      - superdock_db:/var/lib/mysql:rw
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: ${SUPERDOCK_LOCAL_DB_USER}
+      MYSQL_PASSWORD: ${SUPERDOCK_LOCAL_DB_PASS}
+      MYSQL_DATABASE: ${SUPERDOCK_LOCAL_DB_NAME}
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.7.0
+    restart: 'always'
+    stdin_open: false
+    tty: true
+    container_name: superdock_elasticsearch
+    user: elasticsearch
+    environment:
+      - http.host=0.0.0.0
+      - http.port=9200
+      - "http.cors.allow-credentials=true"
+      - "http.cors.enabled=true"
+      - "http.cors.allow-origin=*"
+      - http.cors.allow-methods=OPTIONS,HEAD,GET,POST,PUT,DELETE
+      - "http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Access-Control-Allow-Headers,Access-Control-Allow-Origin,Accept,Authorization"
+      - node.name=elasticsearch
+      - discovery.type=single-node
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    volumes:
+      - superdock_es:/usr/share/elasticsearch/data
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    networks:
+      - superdock_network
+    ports:
+      - 9200:9200
+      - 9300:9300
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.7.0
+    container_name: superdock_kibana
+    restart: 'always'
+    stdin_open: false
+    tty: true
+    networks:
+      - superdock_network
+    links:
+      - elasticsearch
+    ports:
+      - 5601:5601
+
+  adminer:
+    image: adminer
+    container_name: superdock_adminer
+    restart: always
+    networks:
+      - superdock_network
+    ports:
+      - 8080:8080
+
+  mailcatcher:
+    image: schickling/mailcatcher
+    container_name: superdock_mailcatcher
+    networks:
+      - superdock_network
+    ports:
+      - 1080:1080
+    expose:
+      - 1025
+
+  # redis:
+  #   image: redis
+  #   container_name: superdock_redis
+  #   networks:
+  #     - superdock_network
+  #   restart: 'always'
+  #   tty: true
+  #   ports:
+  #     - 6379
+
+  # mercure:
+  #   image: dunglas/mercure
+  #   container_name: superdock_mercure
+  #   restart: 'always'
+  #   tty: true
+  #   environment:
+  #     - ALLOW_ANONYMOUS=1
+  #     - CORS_ALLOWED_ORIGINS=*
+  #     - DEMO=1
+  #     - JWT_KEY=your-256-bit-secret
+  #     - PUBLISH_ALLOWED_ORIGINS=*
+  #   networks:
+  #     - superdock_network
+  #   ports:
+  #     - target: 80
+  #       published: 1337
+  #       protocol: tcp
+
+volumes:
+  superdock_db: {}
+  superdock_es: {}
+
+networks:
+  superdock_network:
+    external: true
+    name: superdock_network
+    driver: host
