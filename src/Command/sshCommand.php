@@ -30,8 +30,7 @@ class sshCommand extends Command
                         'exec',
                         'webserver',
                         'bash'
-                    ], 
-                    $_SERVER['HOME'] . '/SUPERDOCK/' . $_ENV['SUPERDOCK_PROJECT_ID']
+                    ]
                 );
             break;
             case 'staging':
