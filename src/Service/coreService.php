@@ -38,6 +38,19 @@ class coreService
 		return false;	
 	}
 
+	static function infos( $title = "" )
+	{
+		$output = PHP_EOL;
+		$output .= '<fg=black;bg=green> superdock </> ' . $title . PHP_EOL;
+		$output .= PHP_EOL;
+		if( isset( $_ENV['SUPERDOCK_LOCAL_DOMAIN'] ) ) $output .= '<fg=green> local</> https://' . $_ENV['SUPERDOCK_LOCAL_DOMAIN'] . PHP_EOL;
+		if( isset( $_ENV['SUPERDOCK_STAGING_DOMAIN'] ) ) $output .= '<fg=green> staging</> https://' . $_ENV['SUPERDOCK_STAGING_DOMAIN'] . PHP_EOL; 
+		if( isset( $_ENV['SUPERDOCK_PREPRODUCTION_DOMAIN'] ) ) $output .= '<fg=green> preproduction</> https://' . $_ENV['SUPERDOCK_PREPRODUCTION_DOMAIN'] . PHP_EOL; 
+		if( isset( $_ENV['SUPERDOCK_PRODUCTION_DOMAIN'] ) ) $output .= '<fg=green> production</> https://' . $_ENV['SUPERDOCK_PRODUCTION_DOMAIN'] . PHP_EOL;
+		return $output;
+		
+	}
+
 	static function env()
 	{
 		
@@ -56,15 +69,6 @@ class coreService
 		if ( file_exists( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/.env.preproduction' ) ) $dotenv->load( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/.env.preproduction');
 		if ( file_exists( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/.env.production' ) ) $dotenv->load( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/.env.production');
 	
-	}
-
-	static function envPopulate($envs = [])
-	{
-		
-		$dotenv = new Dotenv();
-
-		$dotenv->populate($envs);
-
 	}
 
 	static function dir()
@@ -89,6 +93,9 @@ class coreService
 		}
 		if ( ! is_dir( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/overwrite' ) ) {
 			mkdir( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/overwrite', 0777, true );
+		}
+		if ( ! is_dir( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/custom' ) ) {
+			mkdir( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/custom', 0777, true );
 		}	
 	}
 

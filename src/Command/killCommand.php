@@ -24,8 +24,10 @@ class killCommand extends Command
             [ 
                 $_ENV['SUPERDOCK_USER_DIR'] . '/.superdock/sh/kill.sh', 
                 $_ENV['PASS'], 
-            ]
+            ], 
+            null, null, null, null, null
         );
+        $process->setTty(Process::isTtySupported());
         $process->start();
         $spinner = new SpinnerProgress( $output, 100);
         $spinner->setMessage('killing');

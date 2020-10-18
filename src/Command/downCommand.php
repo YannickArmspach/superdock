@@ -26,8 +26,10 @@ class downCommand extends Command
                 '-f' . $_ENV['SUPERDOCK_USER_DIR'] . '/.superdock/docker/config.yml', 
                 'down', 
                 '--remove-orphans' 
-            ]
+            ], 
+            null, null, null, null, null
         );
+        $process->setTty(Process::isTtySupported());
         $process->start();
         $spinner = new SpinnerProgress( $output );
         $spinner->setMessage('stopping ' . $_ENV['SUPERDOCK_PROJECT_ID']);
@@ -42,8 +44,10 @@ class downCommand extends Command
             [ 
                 $_ENV['SUPERDOCK_USER_DIR'] . '/.superdock/sh/down.sh', 
                 $_ENV['PASS'], 
-            ]
+            ], 
+            null, null, null, null, null
         );
+        $process->setTty(Process::isTtySupported());
         $process->run(function ($type, $buffer) {
             if (Process::ERR === $type) {
                 // echo $buffer;

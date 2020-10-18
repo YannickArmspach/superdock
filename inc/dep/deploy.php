@@ -2,6 +2,8 @@
 
 namespace Deployer;
 
+use Symfony\Component\Process\Process;
+
 require 'recipe/common.php';
 require 'hosts.php';
 require 'settings.php';
@@ -39,6 +41,30 @@ task('rsync:warmup', function() {
     } else {
         writeln("<comment>No way to warmup rsync.</comment>");
     }
+});
+
+desc('deploy:build');
+task('deploy:build', function () {
+    $process = new Process( 
+        [ 
+            'docker-compose', 
+            '-f' . $_ENV['SUPERDOCK_USER_DIR'] . '/.superdock/docker/config.yml', 
+            'exec', 
+            'webserver', 
+            'sh', 
+            '-c', 
+            './node_modules/.bin/encore production --env=' . get('deploy_env')
+        ], 
+        null, null, null, null, null
+    );
+    $process->setTty(Process::isTtySupported());
+    $process->run(function ($type, $buffer) {
+        if (Process::ERR === $type) {
+            echo $buffer;
+        } else {
+            echo $buffer;
+        }
+    });
 });
 
 task('deploy:code', function() {
@@ -80,7 +106,7 @@ task('deploy:code', function() {
 
 desc('Overwrite env');
 task('deploy:env', function () {
-	upload( './.env.{{deploy_env}}', '{{release_path}}/.env' );
+	upload( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/.env.{{deploy_env}}', '{{release_path}}/.env' );
 });
 
 desc('elastic:reindex');
@@ -99,6 +125,7 @@ task('deploy', [
     'deploy:prepare',
     'deploy:lock',
     'deploy:release',
+    'deploy:build',
     'deploy:code',
 	'deploy:env',
     'deploy:shared',

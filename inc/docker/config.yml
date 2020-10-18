@@ -18,11 +18,6 @@ services:
     ports:
       - 80:80
       - 443:443
-      # - 9200:9200
-    expose:
-      - 80
-      - 443
-      - 9200
     links:
       - database
       - elasticsearch
@@ -49,8 +44,10 @@ services:
       - superdock_network
     ports:
       - 3306:3306
+    cap_add:
+      - SYS_NICE
     volumes:
-      - superdock_db:/var/lib/mysql:rw
+      - superdock_db:/var/lib/mysql
     command: --default-authentication-plugin=mysql_native_password
     environment:
       MYSQL_ROOT_PASSWORD: root
@@ -66,7 +63,7 @@ services:
     container_name: superdock_elasticsearch
     user: elasticsearch
     environment:
-      - http.host=0.0.0.0
+      - http.host=elasticsearch
       - http.port=9200
       - "http.cors.allow-credentials=true"
       - "http.cors.enabled=true"
@@ -90,37 +87,37 @@ services:
       - 9200:9200
       - 9300:9300
 
-  kibana:
-    image: docker.elastic.co/kibana/kibana:7.7.0
-    container_name: superdock_kibana
-    restart: 'always'
-    stdin_open: false
-    tty: true
-    networks:
-      - superdock_network
-    links:
-      - elasticsearch
-    ports:
-      - 5601:5601
+  # kibana:
+  #   image: docker.elastic.co/kibana/kibana:7.7.0
+  #   container_name: superdock_kibana
+  #   restart: 'always'
+  #   stdin_open: false
+  #   tty: true
+  #   networks:
+  #     - superdock_network
+  #   links:
+  #     - elasticsearch
+  #   ports:
+  #     - 5601:5601
 
-  adminer:
-    image: adminer
-    container_name: superdock_adminer
-    restart: always
-    networks:
-      - superdock_network
-    ports:
-      - 8080:8080
+  # adminer:
+  #   image: adminer
+  #   container_name: superdock_adminer
+  #   restart: always
+  #   networks:
+  #     - superdock_network
+  #   ports:
+  #     - 8080:8080
 
-  mailcatcher:
-    image: schickling/mailcatcher
-    container_name: superdock_mailcatcher
-    networks:
-      - superdock_network
-    ports:
-      - 1080:1080
-    expose:
-      - 1025
+  # mailcatcher:
+  #   image: schickling/mailcatcher
+  #   container_name: superdock_mailcatcher
+  #   networks:
+  #     - superdock_network
+  #   ports:
+  #     - 1080:1080
+  #   expose:
+  #     - 1025
 
   # redis:
   #   image: redis
@@ -151,11 +148,14 @@ services:
   #       protocol: tcp
 
 volumes:
-  superdock_db: {}
-  superdock_es: {}
+  superdock_db:
+    name: superdock_db_${SUPERDOCK_LOCAL_DB_NAME}
+  superdock_es: 
+    name: superdock_es_${SUPERDOCK_LOCAL_DB_NAME}
+    driver: local
+    # external: true
 
 networks:
   superdock_network:
+    driver: bridge
     external: true
-    name: superdock_network
-    driver: host

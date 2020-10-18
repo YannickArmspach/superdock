@@ -30,7 +30,8 @@ class sshCommand extends Command
                         'exec',
                         'webserver',
                         'bash'
-                    ]
+                    ], 
+                    null, null, null, null, null
                 );
             break;
             case 'staging':
@@ -42,8 +43,10 @@ class sshCommand extends Command
                     $process = new Process( 
                         [ 
                             'ssh',
-                            $_ENV['SUPERDOCK_STAGING_SSH_USER'] . '@' . $_ENV['SUPERDOCK_STAGING_SSH_IP'] . ':' . $_ENV['SUPERDOCK_STAGING_SSH_PORT']
-                        ]
+                            $_ENV['SUPERDOCK_STAGING_SSH_USER'] . '@' . $_ENV['SUPERDOCK_STAGING_SSH_IP'],
+                            '-p' . $_ENV['SUPERDOCK_STAGING_SSH_PORT'],
+                        ], 
+                        null, null, null, null, null
                     );
                 } else {
                     $output->writeln( '<fg=black;bg=red> ERROR </> Please configurate the <fg=cyan>.env.staging</> file' );
@@ -59,8 +62,10 @@ class sshCommand extends Command
                     $process = new Process( 
                         [ 
                             'ssh',
-                            $_ENV['SUPERDOCK_PREPRODUCTION_SSH_USER'] . '@' . $_ENV['SUPERDOCK_PREPRODUCTION_SSH_IP'] . ':' . $_ENV['SUPERDOCK_PREPRODUCTION_SSH_PORT']
-                        ]
+                            $_ENV['SUPERDOCK_PREPRODUCTION_SSH_USER'] . '@' . $_ENV['SUPERDOCK_PREPRODUCTION_SSH_IP'],
+                            '-p' . $_ENV['SUPERDOCK_PREPRODUCTION_SSH_PORT']
+                        ], 
+                        null, null, null, null, null
                     );
                 } else {
                     $output->writeln( '<fg=black;bg=red> ERROR </> Please configurate the <fg=cyan>.env.preproduction</> file' );
@@ -76,8 +81,10 @@ class sshCommand extends Command
                     $process = new Process( 
                         [ 
                             'ssh',
-                            $_ENV['SUPERDOCK_PRODUCTION_SSH_USER'] . '@' . $_ENV['SUPERDOCK_PRODUCTION_SSH_IP']. ':' . $_ENV['SUPERDOCK_PRODUCTION_SSH_PORT']
-                        ]
+                            $_ENV['SUPERDOCK_PRODUCTION_SSH_USER'] . '@' . $_ENV['SUPERDOCK_PRODUCTION_SSH_IP'],
+                            '-p' . $_ENV['SUPERDOCK_PRODUCTION_SSH_PORT']
+                        ], 
+                        null, null, null, null, null
                     );
                 } else {
                     $output->writeln( '<fg=black;bg=red> ERROR </> Please configurate the <fg=cyan>.env.production</> file' );

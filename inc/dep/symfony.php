@@ -31,6 +31,7 @@ set('rsync',[
 		'.git',
 		'.temp',
 		'.env',
+		'.env.local',
 		'.env.staging',
 		'.env.preproduction',
 		'.env.production',

@@ -27,8 +27,10 @@ class openCommand extends Command
                 [ 
                     $_ENV['SUPERDOCK_USER_DIR'] . '/.superdock/sh/cd.sh', 
                     $_ENV['SUPERDOCK_PROJECT_DIR'] . '/sensiotest', 
-                ]
+                ], 
+                null, null, null, null, null
             );
+            $process->setTty(Process::isTtySupported());
             $process->run(function ($type, $buffer) {
                 if (Process::ERR === $type) {
                     // echo $buffer;

@@ -26,23 +26,16 @@ class syncCommand extends Command
     public function execute(InputInterface $input, OutputInterface $output)
     {
 
-        coreService::envPopulate([
-            'SUPERDOCK_SYNC_ENV' => $input->getArgument('env')
-        ]);
-
         if ( $input->getOption('to') == true ) {
 
-            $output->writeln( 'sync local to ' . $input->getArgument('env') );
-        
-        } else {
-            
             $process = new Process( 
                 [ 
                     $_ENV['SUPERDOCK_CORE_DIR'] . '/vendor/deployer/deployer/bin/dep', 
-                    '--file=' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/dep/sync-from.php', 
+                    '--file=' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/dep/sync-to.php', 
                     'sync',
                     $input->getArgument('env')
-                ]
+                ], 
+                null, null, null, null, null
             );
             $process->setTty(Process::isTtySupported());
             $process->run(function ($type, $buffer) {
@@ -52,7 +45,29 @@ class syncCommand extends Command
                     echo $buffer;
                 }
             });
-            $output->writeln( 'sync local from ' . $input->getArgument('env') );
+            $output->writeln( coreService::infos( 'The ' . $input->getArgument('env') . ' environement has been successfully synchronized with local' ) );
+        
+        } else {
+            
+            $process = new Process( 
+                [ 
+                    $_ENV['SUPERDOCK_CORE_DIR'] . '/vendor/deployer/deployer/bin/dep', 
+                    '--file=' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/dep/sync-from.php', 
+                    'sync',
+                    $input->getArgument('env'),
+                    '-vvv'
+                ], 
+                null, null, null, null, null
+            );
+            $process->setTty(Process::isTtySupported());
+            $process->run(function ($type, $buffer) {
+                if (Process::ERR === $type) {
+                    echo $buffer;
+                } else {
+                    echo $buffer;
+                }
+            });
+            $output->writeln( coreService::infos( 'The local environement has been successfully synchronized with ' . $input->getArgument('env') ) );
 
         }
         return Command::SUCCESS;
