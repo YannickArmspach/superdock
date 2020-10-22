@@ -26,7 +26,7 @@ class sshCommand extends Command
                 $process = new Process( 
                     [ 
                         'docker-compose', 
-                        '-f' . $_ENV['SUPERDOCK_USER_DIR'] . '/.superdock/docker/config.yml', 
+                        '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/config.yml', 
                         'exec',
                         'webserver',
                         'bash'
@@ -93,7 +93,6 @@ class sshCommand extends Command
             break;
         }
         $process->setTty(Process::isTtySupported());
-        $process->setTimeout(600);
         $process->run(function ($type, $buffer) {
             if (Process::ERR === $type) {
                 echo $buffer;

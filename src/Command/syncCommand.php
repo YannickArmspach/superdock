@@ -20,7 +20,8 @@ class syncCommand extends Command
         $this->setDescription('Syncronyse environements')
         ->addOption('from', null, InputOption::VALUE_NONE, 'sync from')
         ->addOption('to', null, InputOption::VALUE_NONE, 'sync to')
-        ->addArgument('env', InputArgument::REQUIRED, 'environement');
+        ->addArgument('env', InputArgument::REQUIRED, 'environement')
+        ->addOption('debug', null, InputOption::VALUE_NONE, 'verbose');
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
@@ -28,15 +29,14 @@ class syncCommand extends Command
 
         if ( $input->getOption('to') == true ) {
 
-            $process = new Process( 
-                [ 
-                    $_ENV['SUPERDOCK_CORE_DIR'] . '/vendor/deployer/deployer/bin/dep', 
-                    '--file=' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/dep/sync-to.php', 
-                    'sync',
-                    $input->getArgument('env')
-                ], 
-                null, null, null, null, null
-            );
+            $cmd = [ 
+                $_ENV['SUPERDOCK_CORE_DIR'] . '/vendor/deployer/deployer/bin/dep', 
+                '--file=' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/dep/sync-to.php', 
+                'sync',
+                $input->getArgument('env')
+            ];
+            if ( $input->getOption('debug') ) array_push( $cmd, '-vvv' ); 
+            $process = new Process( $cmd, null, null, null, null, null );
             $process->setTty(Process::isTtySupported());
             $process->run(function ($type, $buffer) {
                 if (Process::ERR === $type) {
@@ -49,16 +49,14 @@ class syncCommand extends Command
         
         } else {
             
-            $process = new Process( 
-                [ 
-                    $_ENV['SUPERDOCK_CORE_DIR'] . '/vendor/deployer/deployer/bin/dep', 
-                    '--file=' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/dep/sync-from.php', 
-                    'sync',
-                    $input->getArgument('env'),
-                    '-vvv'
-                ], 
-                null, null, null, null, null
-            );
+            $cmd = [ 
+                $_ENV['SUPERDOCK_CORE_DIR'] . '/vendor/deployer/deployer/bin/dep', 
+                '--file=' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/dep/sync-from.php', 
+                'sync',
+                $input->getArgument('env')
+            ];
+            if ( $input->getOption('debug') ) array_push( $cmd, '-vvv' ); 
+            $process = new Process( $cmd, null, null, null, null, null );
             $process->setTty(Process::isTtySupported());
             $process->run(function ($type, $buffer) {
                 if (Process::ERR === $type) {

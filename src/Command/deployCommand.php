@@ -18,22 +18,20 @@ class deployCommand extends Command
     public function configure()
     {
         $this->setDescription('Deploy code')
-        ->addArgument('env', InputArgument::REQUIRED, 'environement');
+        ->addArgument('env', InputArgument::REQUIRED, 'environement')
+        ->addOption('debug', null, InputOption::VALUE_NONE, 'verbose');
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
     { 
-        
-        $process = new Process( 
-            [ 
-                $_ENV['SUPERDOCK_CORE_DIR'] . '/vendor/deployer/deployer/bin/dep', 
-                '--file=' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/dep/deploy.php', 
-                'deploy',
-                // '-vvv',
-                $input->getArgument('env')
-            ], 
-            null, null, null, null, null
-        );
+        $cmd = [
+            $_ENV['SUPERDOCK_CORE_DIR'] . '/vendor/deployer/deployer/bin/dep', 
+            '--file=' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/dep/deploy.' . $_ENV['SUPERDOCK_PROJECT_TYPE'] . '.php', 
+            'deploy',
+            $input->getArgument('env')
+        ];
+        if ( $input->getOption('debug') ) array_push( $cmd, '-vvv' ); 
+        $process = new Process( $cmd, null, null, null, null, null );
         $process->setTty(Process::isTtySupported());
         $process->run(function ($type, $buffer) {
             if (Process::ERR === $type) {

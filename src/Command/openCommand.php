@@ -25,7 +25,7 @@ class openCommand extends Command
 
             $process = new Process( 
                 [ 
-                    $_ENV['SUPERDOCK_USER_DIR'] . '/.superdock/sh/cd.sh', 
+                    $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/sh/cd.sh', 
                     $_ENV['SUPERDOCK_PROJECT_DIR'] . '/sensiotest', 
                 ], 
                 null, null, null, null, null

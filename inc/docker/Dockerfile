@@ -137,6 +137,9 @@ COPY conf/app.conf /etc/apache2/sites-available/000-default.conf
 COPY php/app.ini /usr/local/etc/php/conf.d/app.ini
 COPY php/app.ini /usr/local/etc/php/php.ini
 
+#curl cert
+COPY curl/cacert.pem /usr/local/etc/curl/cacert.pem
+
 # Locale
 ENV LC_ALL="fr_FR.UTF-8"
 ENV LANG="fr_FR.UTF-8"

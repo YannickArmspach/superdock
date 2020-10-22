@@ -161,6 +161,7 @@ class initCommand extends Command
             '.env.local' => [
                 'SUPERDOCK_LOCAL_DOMAIN' => $SUPERDOCK_PROJECT_ID . '.local',
                 'SUPERDOCK_LOCAL_DIR' => '/var/www/html/public',
+                'SUPERDOCK_LOCAL_UPLOAD' => '',
                 'SUPERDOCK_LOCAL_SSH_USER' => 'root',
                 'SUPERDOCK_LOCAL_SSH_IP' => 'localhost',
                 'SUPERDOCK_LOCAL_SSH_PORT' => '22',
@@ -173,6 +174,7 @@ class initCommand extends Command
             '.env.staging' => [
                 'SUPERDOCK_STAGING_DOMAIN' => '',
                 'SUPERDOCK_STAGING_DIR' => '',
+                'SUPERDOCK_STAGING_UPLOAD' => '',
                 'SUPERDOCK_STAGING_SSH_USER' => '',
                 'SUPERDOCK_STAGING_SSH_IP' => '',
                 'SUPERDOCK_STAGING_SSH_PORT' => '',
@@ -185,6 +187,7 @@ class initCommand extends Command
             '.env.preproduction' => [
                 'SUPERDOCK_PREPRODUCTION_DOMAIN' => '',
                 'SUPERDOCK_PREPRODUCTION_DIR' => '',
+                'SUPERDOCK_PREPRODUCTION_UPLOAD' => '',
                 'SUPERDOCK_PREPRODUCTION_SSH_USER' => '',
                 'SUPERDOCK_PREPRODUCTION_SSH_IP' => '',
                 'SUPERDOCK_PREPRODUCTION_SSH_PORT' => '',
@@ -197,6 +200,7 @@ class initCommand extends Command
             '.env.production' => [
                 'SUPERDOCK_PRODUCTION_DOMAIN' => '',
                 'SUPERDOCK_PRODUCTION_DIR' => '',
+                'SUPERDOCK_PRODUCTION_UPLOAD' => '',
                 'SUPERDOCK_PRODUCTION_SSH_USER' => '',
                 'SUPERDOCK_PRODUCTION_SSH_IP' => '',
                 'SUPERDOCK_PRODUCTION_SSH_PORT' => '',

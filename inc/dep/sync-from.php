@@ -17,7 +17,7 @@ require 'hosts.php';
 require 'settings.php';
 
 task('sync:media', function () {
-    download( '{{deploy_path}}/shared' . $_ENV['SUPERDOCK_' . strtoupper( get('deploy_env') ) . '_UPLOAD'] . '/', 'public' . $_ENV['SUPERDOCK_' . strtoupper( get('deploy_env') ) . '_UPLOAD']  );
+    download( '{{deploy_path}}/shared' . $_ENV['SUPERDOCK_' . strtoupper( get('deploy_env') ) . '_UPLOAD'] . '/', $_ENV['SUPERDOCK_PROJECT_DIR'] . $_ENV['SUPERDOCK_LOCAL_UPLOAD'] . '/'  );
 });
 
 task('sync:db', function () {
@@ -37,7 +37,7 @@ task('sync:install', function () {
     $process = new Process( 
         [ 
             'docker-compose', 
-            '-f' . $_ENV['SUPERDOCK_USER_DIR'] . '/.superdock/docker/config.yml', 
+            '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/config.yml', 
             'exec', 
             'webserver', 
             'sh', 
@@ -61,7 +61,7 @@ task('sync:migrate', function () {
     $process = new Process( 
         [ 
             'docker-compose', 
-            '-f' . $_ENV['SUPERDOCK_USER_DIR'] . '/.superdock/docker/config.yml', 
+            '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/config.yml', 
             'exec', 
             'webserver', 
             'sh', 
@@ -85,7 +85,7 @@ task('sync:elastic:reindex', function () {
     $process = new Process( 
         [ 
             'docker-compose', 
-            '-f' . $_ENV['SUPERDOCK_USER_DIR'] . '/.superdock/docker/config.yml', 
+            '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/config.yml', 
             'exec', 
             'webserver', 
             'sh', 
@@ -105,7 +105,7 @@ task('sync:elastic:reindex', function () {
 });
 
 task('sync', [
-    'sync:media',
+    // 'sync:media',
     'sync:db',
     'sync:format',
     'sync:install',

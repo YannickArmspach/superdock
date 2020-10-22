@@ -23,7 +23,7 @@ class downCommand extends Command
         $process = new Process( 
             [ 
                 'docker-compose', 
-                '-f' . $_ENV['SUPERDOCK_USER_DIR'] . '/.superdock/docker/config.yml', 
+                '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/config.yml', 
                 'down', 
                 '--remove-orphans' 
             ], 
@@ -42,7 +42,7 @@ class downCommand extends Command
         }
         $process = new Process( 
             [ 
-                $_ENV['SUPERDOCK_USER_DIR'] . '/.superdock/sh/down.sh', 
+                $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/sh/down.sh', 
                 $_ENV['PASS'], 
             ], 
             null, null, null, null, null

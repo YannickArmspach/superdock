@@ -48,7 +48,7 @@ task('deploy:build', function () {
     $process = new Process( 
         [ 
             'docker-compose', 
-            '-f' . $_ENV['SUPERDOCK_USER_DIR'] . '/.superdock/docker/config.yml', 
+            '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/config.yml', 
             'exec', 
             'webserver', 
             'sh', 

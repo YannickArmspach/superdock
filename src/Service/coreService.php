@@ -16,8 +16,60 @@ class coreService
 
 		try {
 		
-			$filesystem->mirror('inc', $_ENV['SUPERDOCK_USER_DIR'] . '/.superdock' );
-		
+			//TODO: check why mirror don't copy all files (think about RecursiveIteratorIterator in Filesystem )
+			//$filesystem->mirror('inc', $_ENV['SUPERDOCK_USER_DIR'] . '/.superdock/inc', null, ['override' => true, 'copy_on_windows' => true, 'delete' => true ] );
+			
+			$source = "./inc";
+			$dest= $_ENV['SUPERDOCK_USER_DIR'] . '/.superdock/inc';
+
+			if ( ! file_exists( $dest ) ) mkdir($dest, 0755);
+			foreach (
+			$iterator = new \RecursiveIteratorIterator(
+			new \RecursiveDirectoryIterator($source, \RecursiveDirectoryIterator::SKIP_DOTS),
+			\RecursiveIteratorIterator::SELF_FIRST) as $item
+			) {
+			if ($item->isDir()) {
+				if ( ! file_exists( $dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName() ) ) mkdir($dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
+			} else {
+				copy($item, $dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
+			}
+			}
+
+			$source = "./src";
+			$dest= $_ENV['SUPERDOCK_USER_DIR'] . '/.superdock/src';
+
+			if ( ! file_exists( $dest ) ) mkdir($dest, 0755);
+			foreach (
+			$iterator = new \RecursiveIteratorIterator(
+			new \RecursiveDirectoryIterator($source, \RecursiveDirectoryIterator::SKIP_DOTS),
+			\RecursiveIteratorIterator::SELF_FIRST) as $item
+			) {
+			if ($item->isDir()) {
+				if ( ! file_exists( $dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName() ) ) mkdir($dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
+			} else {
+				copy($item, $dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
+			}
+			}
+
+			$source = "./vendor";
+			$dest= $_ENV['SUPERDOCK_USER_DIR'] . '/.superdock/vendor';
+
+			if ( ! file_exists( $dest ) ) mkdir($dest, 0755);
+			foreach (
+			$iterator = new \RecursiveIteratorIterator(
+			new \RecursiveDirectoryIterator($source, \RecursiveDirectoryIterator::SKIP_DOTS),
+			\RecursiveIteratorIterator::SELF_FIRST) as $item
+			) {
+			if ($item->isDir()) {
+				if ( ! file_exists( $dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName() ) ) mkdir($dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
+			} else {
+				copy($item, $dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
+			}
+			}
+
+			$filesystem->chmod( $_ENV['SUPERDOCK_USER_DIR'] . '/.superdock/vendor/deployer/deployer/bin/dep', 0755, 0000, false );
+			$filesystem->chmod( $_ENV['SUPERDOCK_USER_DIR'] . '/.superdock/inc/sh', 0755, 0000, true );
+
 		} catch (IOExceptionInterface $exception) {
 
 			echo "An error occurred while creating your directory at " . $exception->getPath();
@@ -56,9 +108,15 @@ class coreService
 		
 		$dotenv = new Dotenv();
 
+		if ( strlen(\Phar::running()) > 0 ) {
+			$dir = $_SERVER['HOME'] . '/.superdock';
+		} else {
+			$dir = dirname(dirname(__DIR__));
+		}
+		
 		$dotenv->populate([
 			'PASS' => 'handy',
-			'SUPERDOCK_CORE_DIR' => dirname(dirname(__DIR__)),
+			'SUPERDOCK_CORE_DIR' => $dir,
 			'SUPERDOCK_USER_DIR' => $_SERVER['HOME'],
 			'SUPERDOCK_PROJECT_DIR' => $_SERVER['PWD']
 		]);

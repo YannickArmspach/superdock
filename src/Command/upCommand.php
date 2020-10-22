@@ -27,7 +27,7 @@ class upCommand extends Command
             $process = new Process( 
                 [ 
                     'docker-compose', 
-                    '-f' . $_ENV['SUPERDOCK_USER_DIR'] . '/.superdock/docker/config.yml',
+                    '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/config.yml',
                     'up', 
                     '-d', 
                     '--build', 
@@ -60,7 +60,7 @@ class upCommand extends Command
 
                 $process = new Process( 
                     [ 
-                        $_ENV['SUPERDOCK_USER_DIR'] . '/.superdock/sh/cert.sh', 
+                        $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/sh/cert.sh', 
                         $_ENV['PASS'], 
                         $_ENV['SUPERDOCK_LOCAL_DOMAIN'], 
                         $_ENV['SUPERDOCK_CORE_DIR'], 
@@ -82,7 +82,7 @@ class upCommand extends Command
 
             $process = new Process( 
                 [ 
-                    $_ENV['SUPERDOCK_USER_DIR'] . '/.superdock/sh/up.sh', 
+                    $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/sh/up.sh', 
                     $_ENV['PASS'], 
                     $_ENV['SUPERDOCK_LOCAL_DOMAIN'], 
                     $_ENV['SUPERDOCK_CORE_DIR'], 
