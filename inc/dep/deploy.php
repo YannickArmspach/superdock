@@ -2,6 +2,7 @@
 
 namespace Deployer;
 
+use SuperDock\Service\coreService;
 use Symfony\Component\Process\Process;
 
 require 'recipe/common.php';
@@ -45,26 +46,15 @@ task('rsync:warmup', function() {
 
 desc('deploy:build');
 task('deploy:build', function () {
-    $process = new Process( 
-        [ 
-            'docker-compose', 
-            '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/config.yml', 
-            'exec', 
-            'webserver', 
-            'sh', 
-            '-c', 
-            './node_modules/.bin/encore production --env=' . get('deploy_env')
-        ], 
-        null, null, null, null, null
-    );
-    $process->setTty(Process::isTtySupported());
-    $process->run(function ($type, $buffer) {
-        if (Process::ERR === $type) {
-            echo $buffer;
-        } else {
-            echo $buffer;
-        }
-    });
+    coreService::process([ 
+        'docker-compose', 
+        '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
+        'exec', 
+        'webserver', 
+        'sh', 
+        '-c', 
+        './node_modules/.bin/encore production --env=' . get('deploy_env')
+    ]);
 });
 
 task('deploy:code', function() {

@@ -2,6 +2,7 @@
 
 namespace SuperDock\Command;
 
+use SuperDock\Service\coreService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -23,16 +24,13 @@ class sshCommand extends Command
     {
         switch ( $input->getArgument('env') ) {
             case 'local':
-                $process = new Process( 
-                    [ 
-                        'docker-compose', 
-                        '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/config.yml', 
-                        'exec',
-                        'webserver',
-                        'bash'
-                    ], 
-                    null, null, null, null, null
-                );
+                coreService::process([ 
+                    'docker-compose', 
+                    '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
+                    'exec',
+                    'webserver',
+                    'bash'
+                ]);
             break;
             case 'staging':
                 if ( 
@@ -40,14 +38,11 @@ class sshCommand extends Command
                     isset( $_ENV['SUPERDOCK_STAGING_SSH_IP'] ) && $_ENV['SUPERDOCK_STAGING_SSH_IP'] && 
                     isset( $_ENV['SUPERDOCK_STAGING_SSH_PORT'] ) && $_ENV['SUPERDOCK_STAGING_SSH_PORT']
                 ) {
-                    $process = new Process( 
-                        [ 
-                            'ssh',
-                            $_ENV['SUPERDOCK_STAGING_SSH_USER'] . '@' . $_ENV['SUPERDOCK_STAGING_SSH_IP'],
-                            '-p' . $_ENV['SUPERDOCK_STAGING_SSH_PORT'],
-                        ], 
-                        null, null, null, null, null
-                    );
+                    coreService::process([ 
+                        'ssh',
+                        $_ENV['SUPERDOCK_STAGING_SSH_USER'] . '@' . $_ENV['SUPERDOCK_STAGING_SSH_IP'],
+                        '-p' . $_ENV['SUPERDOCK_STAGING_SSH_PORT'],
+                    ]);
                 } else {
                     $output->writeln( '<fg=black;bg=red> ERROR </> Please configurate the <fg=cyan>.env.staging</> file' );
                     return Command::FAILURE;
@@ -59,14 +54,11 @@ class sshCommand extends Command
                     isset( $_ENV['SUPERDOCK_PREPRODUCTION_SSH_IP'] ) && $_ENV['SUPERDOCK_PREPRODUCTION_SSH_IP'] && 
                     isset( $_ENV['SUPERDOCK_PREPRODUCTION_SSH_PORT'] ) && $_ENV['SUPERDOCK_PREPRODUCTION_SSH_PORT']
                 ) {
-                    $process = new Process( 
-                        [ 
-                            'ssh',
-                            $_ENV['SUPERDOCK_PREPRODUCTION_SSH_USER'] . '@' . $_ENV['SUPERDOCK_PREPRODUCTION_SSH_IP'],
-                            '-p' . $_ENV['SUPERDOCK_PREPRODUCTION_SSH_PORT']
-                        ], 
-                        null, null, null, null, null
-                    );
+                    coreService::process([ 
+                        'ssh',
+                        $_ENV['SUPERDOCK_PREPRODUCTION_SSH_USER'] . '@' . $_ENV['SUPERDOCK_PREPRODUCTION_SSH_IP'],
+                        '-p' . $_ENV['SUPERDOCK_PREPRODUCTION_SSH_PORT']
+                    ]);
                 } else {
                     $output->writeln( '<fg=black;bg=red> ERROR </> Please configurate the <fg=cyan>.env.preproduction</> file' );
                     return Command::FAILURE;
@@ -78,28 +70,17 @@ class sshCommand extends Command
                     isset( $_ENV['SUPERDOCK_PRODUCTION_SSH_IP'] ) && $_ENV['SUPERDOCK_PRODUCTION_SSH_IP'] && 
                     isset( $_ENV['SUPERDOCK_PRODUCTION_SSH_PORT'] ) && $_ENV['SUPERDOCK_PRODUCTION_SSH_PORT']
                 ) {
-                    $process = new Process( 
-                        [ 
-                            'ssh',
-                            $_ENV['SUPERDOCK_PRODUCTION_SSH_USER'] . '@' . $_ENV['SUPERDOCK_PRODUCTION_SSH_IP'],
-                            '-p' . $_ENV['SUPERDOCK_PRODUCTION_SSH_PORT']
-                        ], 
-                        null, null, null, null, null
-                    );
+                    coreService::process([ 
+                        'ssh',
+                        $_ENV['SUPERDOCK_PRODUCTION_SSH_USER'] . '@' . $_ENV['SUPERDOCK_PRODUCTION_SSH_IP'],
+                        '-p' . $_ENV['SUPERDOCK_PRODUCTION_SSH_PORT']
+                    ]);
                 } else {
                     $output->writeln( '<fg=black;bg=red> ERROR </> Please configurate the <fg=cyan>.env.production</> file' );
                     return Command::FAILURE;
                 }
             break;
         }
-        $process->setTty(Process::isTtySupported());
-        $process->run(function ($type, $buffer) {
-            if (Process::ERR === $type) {
-                echo $buffer;
-            } else {
-                echo $buffer;
-            }
-        });
         return Command::SUCCESS;
     }
 }

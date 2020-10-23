@@ -3,6 +3,7 @@
 namespace SuperDock\Command;
 
 use icanhazstring\SymfonyConsoleSpinner\SpinnerProgress;
+use SuperDock\Service\coreService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -20,31 +21,12 @@ class killCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $process = new Process( 
-            [ 
-                $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/sh/kill.sh', 
-                $_ENV['PASS'], 
-            ], 
-            null, null, null, null, null
-        );
-        $process->setTty(Process::isTtySupported());
-        $process->run(function ($type, $buffer) {
-            if (Process::ERR === $type) {
-                echo $buffer;
-            } else {
-                echo $buffer;
-            }
-        });
-        // $process->start();
-        // $spinner = new SpinnerProgress( $output, 100);
-        // $spinner->setMessage('killing');
-        // while ($process->isRunning()) {
-        //     $spinner->advance();
-        //     usleep(5000);
-        // }
-        // if ( $process->isSuccessful() ) {
-        //     $spinner->finish();
-        // }
+
+        coreService::process([ 
+            $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/sh/kill.sh', 
+            $_ENV['PASS'], 
+        ]);
+        
         $output->writeln( '<fg=black;bg=green> RHAAAAHH </> You killed them all. Now, you can start fresh and zen ;)' );
         return Command::SUCCESS;
     }

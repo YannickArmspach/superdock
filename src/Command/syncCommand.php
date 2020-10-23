@@ -36,15 +36,7 @@ class syncCommand extends Command
                 $input->getArgument('env')
             ];
             if ( $input->getOption('debug') ) array_push( $cmd, '-vvv' ); 
-            $process = new Process( $cmd, null, null, null, null, null );
-            $process->setTty(Process::isTtySupported());
-            $process->run(function ($type, $buffer) {
-                if (Process::ERR === $type) {
-                    echo $buffer;
-                } else {
-                    echo $buffer;
-                }
-            });
+            coreService::process($cmd);
             $output->writeln( coreService::infos( 'The ' . $input->getArgument('env') . ' environement has been successfully synchronized with local' ) );
         
         } else {
@@ -56,15 +48,7 @@ class syncCommand extends Command
                 $input->getArgument('env')
             ];
             if ( $input->getOption('debug') ) array_push( $cmd, '-vvv' ); 
-            $process = new Process( $cmd, null, null, null, null, null );
-            $process->setTty(Process::isTtySupported());
-            $process->run(function ($type, $buffer) {
-                if (Process::ERR === $type) {
-                    echo $buffer;
-                } else {
-                    echo $buffer;
-                }
-            });
+            coreService::process($cmd);
             $output->writeln( coreService::infos( 'The local environement has been successfully synchronized with ' . $input->getArgument('env') ) );
 
         }

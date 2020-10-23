@@ -31,15 +31,7 @@ class deployCommand extends Command
             $input->getArgument('env')
         ];
         if ( $input->getOption('debug') ) array_push( $cmd, '-vvv' ); 
-        $process = new Process( $cmd, null, null, null, null, null );
-        $process->setTty(Process::isTtySupported());
-        $process->run(function ($type, $buffer) {
-            if (Process::ERR === $type) {
-                echo $buffer;
-            } else {
-                echo $buffer;
-            }
-        });
+        coreService::process($cmd);
         $output->writeln( coreService::infos( 'Code was successfully deploy to the ' . $input->getArgument('env') . ' environement' ) );
     
         return Command::SUCCESS;

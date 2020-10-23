@@ -1,6 +1,7 @@
 <?php
 namespace Deployer;
 
+use SuperDock\Service\coreService;
 use Symfony\Component\Process\Process;
 
 require 'recipe/common.php';
@@ -14,26 +15,15 @@ task('sync:media', function () {
 
 task('sync:dump', function () {
     $SUPERDOCK = get('SUPERDOCK');
-    $process = new Process( 
-        [ 
-            'docker-compose', 
-            '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/config.yml', 
-            'exec', 
-            'webserver', 
-            'sh', 
-			'-c', 
-			'mysqldump --host=superdock_database --user=root --password=root ' . $_ENV['SUPERDOCK_LOCAL_DB_NAME'] . ' > /var/www/html/superdock/database/local/local.sql'
-        ]
-    );
-    $process->setTty(Process::isTtySupported());
-    $process->run(function ($type, $buffer) {
-        if (Process::ERR === $type) {
-            echo $buffer;
-        } else {
-            echo $buffer;
-        }
-    });
-
+    coreService::process([ 
+        'docker-compose', 
+        '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
+        'exec', 
+        'webserver', 
+        'sh', 
+        '-c', 
+        'mysqldump --host=superdock_database --user=root --password=root ' . $_ENV['SUPERDOCK_LOCAL_DB_NAME'] . ' > /var/www/html/' . $_ENV['SUPERDOCK_PROJECT_BASENAME'] . '/superdock/database/local/local.sql'
+    ]);
 });
 
 task('sync:format', function () {

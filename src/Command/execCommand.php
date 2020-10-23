@@ -23,27 +23,17 @@ class execCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     { 
-        $process = new Process( 
-            [ 
-                'docker-compose', 
-                '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/config.yml', 
-                'exec', 
-                'webserver', 
-                'sh', 
-                '-c', 
-                $input->getArgument('execute_command')
-            ], 
-            null, null, null, null, null
-        );
-        $process->setTty(Process::isTtySupported());
-        $process->run(function ($type, $buffer) {
-            if (Process::ERR === $type) {
-                echo $buffer;
-            } else {
-                echo $buffer;
-            }
-        });
-        $output->writeln( coreService::infos( 'Your command ' . $command . ' was executed in local container' ) );
+        coreService::process([ 
+            'docker-compose', 
+            '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
+            'exec', 
+            'webserver', 
+            'sh', 
+            '-c', 
+            $input->getArgument('execute_command')
+        ]);
+        
+        $output->writeln( coreService::infos( 'Your command ' . $input->getArgument('execute_command') . ' was executed in local container' ) );
     
         return Command::SUCCESS;
     }

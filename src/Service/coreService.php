@@ -5,6 +5,7 @@ namespace SuperDock\Service;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Dotenv\Dotenv;
+use Symfony\Component\Process\Process;
 
 class coreService
 {
@@ -118,7 +119,8 @@ class coreService
 			'PASS' => 'handy',
 			'SUPERDOCK_CORE_DIR' => $dir,
 			'SUPERDOCK_USER_DIR' => $_SERVER['HOME'],
-			'SUPERDOCK_PROJECT_DIR' => $_SERVER['PWD']
+			'SUPERDOCK_PROJECT_DIR' => $_SERVER['PWD'],
+			'SUPERDOCK_PROJECT_BASENAME' => basename( $_SERVER['PWD'] )
 		]);
 
 		if ( file_exists( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/.superdock' ) ) $dotenv->load( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/.superdock');
@@ -155,6 +157,19 @@ class coreService
 		if ( ! is_dir( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/custom' ) ) {
 			mkdir( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/custom', 0777, true );
 		}	
+	}
+
+	static function process( $command = [] )
+	{
+		$process = new Process( $command, null, null, null, null, null );
+		$process->setTty(Process::isTtySupported());
+		$process->run(function ($type, $buffer) {
+			if (Process::ERR === $type) {
+				echo $buffer;
+			} else {
+				echo $buffer;
+			}
+		});
 	}
 
 }

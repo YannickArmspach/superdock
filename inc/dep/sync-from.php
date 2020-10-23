@@ -1,6 +1,7 @@
 <?php
 namespace Deployer;
 
+use SuperDock\Service\coreService;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -33,79 +34,45 @@ task('sync:format', function () {
 });
 
 task('sync:install', function () {
-    
-    $process = new Process( 
-        [ 
-            'docker-compose', 
-            '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/config.yml', 
-            'exec', 
-            'webserver', 
-            'sh', 
-            '-c', 
-            'mysql --host=superdock_database --user=root --password=root ' . $_ENV['SUPERDOCK_LOCAL_DB_NAME'] . ' < /var/www/html/superdock/database/' . get('deploy_env') . '/local.sql', 
-        ]
-    );
-    $process->setTty(Process::isTtySupported());
-    $process->run(function ($type, $buffer) {
-        if (Process::ERR === $type) {
-            echo $buffer;
-        } else {
-            echo $buffer;
-        }
-    });
-
+    coreService::process([ 
+        'docker-compose', 
+        '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
+        'exec', 
+        'webserver', 
+        'sh', 
+        '-c', 
+        'mysql --host=superdock_database --user=root --password=root ' . $_ENV['SUPERDOCK_LOCAL_DB_NAME'] . ' < /var/www/html/' . $_ENV['SUPERDOCK_PROJECT_BASENAME'] . '/superdock/database/' . get('deploy_env') . '/local.sql', 
+    ]);
 });
 
 desc('sync:migrate');
 task('sync:migrate', function () {
-    $process = new Process( 
-        [ 
-            'docker-compose', 
-            '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/config.yml', 
-            'exec', 
-            'webserver', 
-            'sh', 
-            '-c', 
-            './bin/console --no-interaction doctrine:migration:migrate'
-        ], 
-        null, null, null, null, null
-    );
-    $process->setTty(Process::isTtySupported());
-    $process->run(function ($type, $buffer) {
-        if (Process::ERR === $type) {
-            echo $buffer;
-        } else {
-            echo $buffer;
-        }
-    });
+    coreService::process([ 
+        'docker-compose', 
+        '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
+        'exec', 
+        'webserver', 
+        'sh', 
+        '-c', 
+        './bin/console --no-interaction doctrine:migration:migrate'
+    ]);
 });
 
 desc('sync:elastic:reindex');
 task('sync:elastic:reindex', function () {
-    $process = new Process( 
-        [ 
-            'docker-compose', 
-            '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/config.yml', 
-            'exec', 
-            'webserver', 
-            'sh', 
-            '-c', 
-            './bin/console elastic:reindex'
-        ], 
-        null, null, null, null, null
-    );
-    $process->setTty(Process::isTtySupported());
-    $process->run(function ($type, $buffer) {
-        if (Process::ERR === $type) {
-            echo $buffer;
-        } else {
-            echo $buffer;
-        }
-    });
+    coreService::process([ 
+        'docker-compose', 
+        '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
+        'exec', 
+        'webserver', 
+        'sh', 
+        '-c', 
+        './bin/console elastic:reindex'
+    ]);
 });
 
 task('sync', [
-    // 'sync:media',
+    'sync:media',
     'sync:db',
     'sync:format',
     'sync:install',

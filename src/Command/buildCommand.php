@@ -24,26 +24,15 @@ class buildCommand extends Command
 
         if ( isset( $_ENV['SUPERDOCK_PROJECT_ID'] ) && $_ENV['SUPERDOCK_PROJECT_ID'] ) {
 
-            $process = new Process( 
-                [ 
-                    'docker-compose', 
-                    '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/config.yml', 
-                    'exec', 
-                    'webserver', 
-                    'sh', 
-                    '-c', 
-                    'npm rebuild node-sass && npm install', 
-                ], 
-                null, null, null, null, null
-            );
-            $process->setTty(Process::isTtySupported());
-            $process->run(function ($type, $buffer) {
-                if (Process::ERR === $type) {
-                    echo $buffer;
-                } else {
-                    echo $buffer;
-                }
-            });
+            coreService::process([ 
+                'docker-compose', 
+                '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yaml', 
+                'exec', 
+                'webserver', 
+                'sh', 
+                '-c', 
+                'npm rebuild node-sass && npm install', 
+            ]);
 
             $output->writeln( coreService::infos('Project was build') );
             

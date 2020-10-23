@@ -14,17 +14,18 @@ services:
       - superdock_network
     depends_on:
       - database
-      - elasticsearch
+      # - elasticsearch
     ports:
       - 80:80
       - 443:443
     links:
       - database
-      - elasticsearch
+      # - elasticsearch
       # - mercure
       # - redis
     volumes:
-      - ${SUPERDOCK_PROJECT_DIR}/:/var/www/html
+      - superdock_sync:/var/www/html:nocopy
+      # - ${SUPERDOCK_PROJECT_DIR}/:/var/www/html
       - ${SUPERDOCK_PROJECT_DIR}/superdock/certificate/${SUPERDOCK_LOCAL_DOMAIN}:/etc/ssl/certs
     environment:
       MYSQL_ROOT_PASSWORD: root
@@ -33,6 +34,7 @@ services:
       MYSQL_DATABASE: ${SUPERDOCK_LOCAL_DB_NAME}
       SUPERDOCK_LOCAL_DIR: ${SUPERDOCK_LOCAL_DIR}
       SUPERDOCK_LOCAL_DIR_PUBLIC: ${SUPERDOCK_LOCAL_DIR_PUBLIC}
+      SUPERDOCK_PROJECT_BASENAME: ${SUPERDOCK_PROJECT_BASENAME}
       SUPERDOCK_LOCAL_DOMAIN: ${SUPERDOCK_LOCAL_DOMAIN}
 
   database:
@@ -56,37 +58,37 @@ services:
       MYSQL_PASSWORD: ${SUPERDOCK_LOCAL_DB_PASS}
       MYSQL_DATABASE: ${SUPERDOCK_LOCAL_DB_NAME}
 
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.7.0
-    restart: 'always'
-    stdin_open: false
-    tty: true
-    container_name: superdock_elasticsearch
-    user: elasticsearch
-    environment:
-      - http.host=elasticsearch
-      - http.port=9200
-      - "http.cors.allow-credentials=true"
-      - "http.cors.enabled=true"
-      - "http.cors.allow-origin=*"
-      - http.cors.allow-methods=OPTIONS,HEAD,GET,POST,PUT,DELETE
-      - "http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Access-Control-Allow-Headers,Access-Control-Allow-Origin,Accept,Authorization"
-      - node.name=elasticsearch
-      - discovery.type=single-node
-      - cluster.name=docker-cluster
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-    volumes:
-      - superdock_es:/usr/share/elasticsearch/data
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    networks:
-      - superdock_network
-    ports:
-      - 9200:9200
-      - 9300:9300
+  # elasticsearch:
+  #   image: docker.elastic.co/elasticsearch/elasticsearch:7.7.0
+  #   restart: 'always'
+  #   stdin_open: false
+  #   tty: true
+  #   container_name: superdock_elasticsearch
+  #   user: elasticsearch
+  #   environment:
+  #     - http.host=elasticsearch
+  #     - http.port=9200
+  #     - "http.cors.allow-credentials=true"
+  #     - "http.cors.enabled=true"
+  #     - "http.cors.allow-origin=*"
+  #     - http.cors.allow-methods=OPTIONS,HEAD,GET,POST,PUT,DELETE
+  #     - "http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Access-Control-Allow-Headers,Access-Control-Allow-Origin,Accept,Authorization"
+  #     - node.name=elasticsearch
+  #     - discovery.type=single-node
+  #     - cluster.name=docker-cluster
+  #     - bootstrap.memory_lock=true
+  #     - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+  #   volumes:
+  #     - superdock_es:/usr/share/elasticsearch/data
+  #   ulimits:
+  #     memlock:
+  #       soft: -1
+  #       hard: -1
+  #   networks:
+  #     - superdock_network
+  #   ports:
+  #     - 9200:9200
+  #     - 9300:9300
 
   # kibana:
   #   image: docker.elastic.co/kibana/kibana:7.7.0
@@ -149,12 +151,14 @@ services:
   #       protocol: tcp
 
 volumes:
+  superdock_sync:
+    external: true
   superdock_db:
     name: superdock_db_${SUPERDOCK_LOCAL_DB_NAME}
-  superdock_es: 
-    name: superdock_es_${SUPERDOCK_LOCAL_DB_NAME}
-    driver: local
-    # external: true
+  # superdock_es: 
+  #   name: superdock_es_${SUPERDOCK_LOCAL_DB_NAME}
+  #   driver: local
+  #   external: true
 
 networks:
   superdock_network:
