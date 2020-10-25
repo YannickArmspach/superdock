@@ -1,0 +1,25 @@
+sync:
+  defaults:
+    ignore:
+      vcs: true
+      paths:
+        - ".idea"
+        - .idea
+        - .DS_Store
+        - '.sass-cache'
+        - 'sass'
+        - 'sass-cache'
+        - 'composer.json'
+        # - 'vendor'
+        - 'package.json'
+        - 'node_modules'
+        - '.gitignore'
+        - '.git'
+        - '*.coffee'
+        - '*.scss'
+        - '*.sass'
+        - '/web/sites/*/files'
+        - '/web/sites/*/private'
+    permissions:
+      defaultFileMode: 0644
+      defaultDirectoryMode: 0755

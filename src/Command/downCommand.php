@@ -21,13 +21,7 @@ class downCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        coreService::process([ 
-            'docker-sync',
-            'stop',
-            '--config', 
-            $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-sync.yml',
-        ]);
-        
+
         coreService::process([ 
             'docker-compose', 
             '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
@@ -35,6 +29,13 @@ class downCommand extends Command
             '--remove-orphans' 
         ]);
 
+        coreService::process([ 
+            'mutagen', 
+            'sync',
+            'terminate',
+            'superdock',
+        ]);
+        
         coreService::process([ 
             $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/sh/down.sh', 
             $_ENV['PASS'], 

@@ -41,7 +41,7 @@ task('sync:install', function () {
         'webserver', 
         'sh', 
         '-c', 
-        'mysql --host=superdock_database --user=root --password=root ' . $_ENV['SUPERDOCK_LOCAL_DB_NAME'] . ' < /var/www/html/' . $_ENV['SUPERDOCK_PROJECT_BASENAME'] . '/superdock/database/' . get('deploy_env') . '/local.sql', 
+        'mysql --host=superdock_database --user=root --password=root ' . $_ENV['SUPERDOCK_LOCAL_DB_NAME'] . ' < /var/www/html/superdock/database/' . get('deploy_env') . '/local.sql', 
     ]);
 });
 

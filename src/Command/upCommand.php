@@ -32,13 +32,6 @@ class upCommand extends Command
             ]);
             
             coreService::process([ 
-				'docker-sync',
-                'start',
-                '--config', 
-                $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-sync.yml',
-            ]);
-            
-            coreService::process([ 
                 'docker-compose', 
                 '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml',
                 'up',
@@ -49,6 +42,24 @@ class upCommand extends Command
                 '--renew-anon-volumes',
             ]);
 
+            coreService::process([ 
+                'mutagen', 
+                'sync',
+                'terminate',
+                'superdock',
+            ]);
+
+            coreService::process([ 
+                'mutagen', 
+                '-c' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/mutagen.yml',
+                'sync',
+                'create',
+                '--name',
+                'superdock',
+                '~/Projects/futuroscope-scolaire',
+                'docker://root@superdock_webserver/var/www/html',
+            ]);
+            
             if ( ! file_exists( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/certificate/' . $_ENV['SUPERDOCK_LOCAL_DOMAIN'] . '/' . $_ENV['SUPERDOCK_LOCAL_DOMAIN'] . '.pem' ) ) {
 
                 coreService::process([ 
@@ -68,16 +79,6 @@ class upCommand extends Command
                 $_ENV['SUPERDOCK_LOCAL_DOMAIN'], 
                 $_ENV['SUPERDOCK_CORE_DIR'], 
                 $_ENV['SUPERDOCK_PROJECT_ID'], 
-            ]);
-
-            coreService::process([ 
-                'docker-compose', 
-                '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
-                'exec', 
-                'webserver', 
-                'sh', 
-                '-c', 
-                'php futuroscope-scolaire/vendor/drush/drush/drush.php cache:rebuild'
             ]);
 
             $output->writeln( coreService::infos() );

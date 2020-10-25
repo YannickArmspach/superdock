@@ -8,9 +8,7 @@ local environment for symfony, drupal and wordpress, synchronize directories and
 ### Installation requirements:
 
   - [x] [Docker](https://docs.docker.com/install/)
-  - [x] [Docker Sync](https://docker-sync.readthedocs.io/en/latest/getting-started/installation.html)
-  - [ ] [Virtualbox](https://www.virtualbox.org/)
-  - [ ] [Docker Machine](https://docs.docker.com/machine/install-machine/)
+  - [x] [Mutagen](https://mutagen.io/documentation/introduction/installationl)
   
 ## install for users:
 ```sh

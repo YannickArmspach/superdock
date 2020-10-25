@@ -1,4 +1,4 @@
-version: "3.7"
+version: "3.8"
 
 services:
 
@@ -24,7 +24,7 @@ services:
       # - mercure
       # - redis
     volumes:
-      - superdock_sync:/var/www/html:nocopy
+      # - superdock_sync:/var/www/html:nocopy
       # - ${SUPERDOCK_PROJECT_DIR}/:/var/www/html
       - ${SUPERDOCK_PROJECT_DIR}/superdock/certificate/${SUPERDOCK_LOCAL_DOMAIN}:/etc/ssl/certs
     environment:
@@ -151,8 +151,8 @@ services:
   #       protocol: tcp
 
 volumes:
-  superdock_sync:
-    external: true
+  # superdock_sync:
+  #   external: true
   superdock_db:
     name: superdock_db_${SUPERDOCK_LOCAL_DB_NAME}
   # superdock_es: 
