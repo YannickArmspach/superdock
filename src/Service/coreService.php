@@ -20,6 +20,8 @@ class coreService
 			//TODO: check why mirror don't copy all files (think about RecursiveIteratorIterator in Filesystem )
 			//$filesystem->mirror('inc', $_ENV['SUPERDOCK_USER_DIR'] . '/.superdock/inc', null, ['override' => true, 'copy_on_windows' => true, 'delete' => true ] );
 			
+			if ( ! file_exists( $_ENV['SUPERDOCK_USER_DIR'] . '/.superdock' ) ) mkdir( $_ENV['SUPERDOCK_USER_DIR'] . '/.superdock', 0755 );
+
 			$source = "./inc";
 			$dest= $_ENV['SUPERDOCK_USER_DIR'] . '/.superdock/inc';
 
@@ -133,29 +135,31 @@ class coreService
 
 	static function dir()
 	{
-		if ( isset( $_ENV['SUPERDOCK_LOCAL_DOMAIN'] ) && ! is_dir( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/certificate/' . $_ENV['SUPERDOCK_LOCAL_DOMAIN'] ) ) {
-			mkdir( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/certificate/' . $_ENV['SUPERDOCK_LOCAL_DOMAIN'], 0777, true );
-		}
-		if ( ! is_dir( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/database' ) ) {
-			mkdir( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/database', 0777, true );
-		}
-		if ( ! is_dir( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/database/local' ) ) {
-			mkdir( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/database/local', 0777, true );
-		}
-		if ( ! is_dir( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/database/staging' ) ) {
-			mkdir( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/database/staging', 0777, true );
-		}
-		if ( ! is_dir( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/database/preproduction' ) ) {
-			mkdir( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/database/preproduction', 0777, true );
-		}
-		if ( ! is_dir( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/database/production' ) ) {
-			mkdir( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/database/production', 0777, true );
-		}
-		if ( ! is_dir( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/overwrite' ) ) {
-			mkdir( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/overwrite', 0777, true );
-		}
-		if ( ! is_dir( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/custom' ) ) {
-			mkdir( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/custom', 0777, true );
+		if ( file_exists( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/.superdock' ) ) {
+			if ( isset( $_ENV['SUPERDOCK_LOCAL_DOMAIN'] ) && ! is_dir( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/certificate/' . $_ENV['SUPERDOCK_LOCAL_DOMAIN'] ) ) {
+				mkdir( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/certificate/' . $_ENV['SUPERDOCK_LOCAL_DOMAIN'], 0777, true );
+			}
+			if ( ! is_dir( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/database' ) ) {
+				mkdir( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/database', 0777, true );
+			}
+			if ( ! is_dir( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/database/local' ) ) {
+				mkdir( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/database/local', 0777, true );
+			}
+			if ( ! is_dir( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/database/staging' ) ) {
+				mkdir( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/database/staging', 0777, true );
+			}
+			if ( ! is_dir( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/database/preproduction' ) ) {
+				mkdir( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/database/preproduction', 0777, true );
+			}
+			if ( ! is_dir( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/database/production' ) ) {
+				mkdir( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/database/production', 0777, true );
+			}
+			if ( ! is_dir( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/overwrite' ) ) {
+				mkdir( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/overwrite', 0777, true );
+			}
+			if ( ! is_dir( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/custom' ) ) {
+				mkdir( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/custom', 0777, true );
+			}
 		}	
 	}
 
