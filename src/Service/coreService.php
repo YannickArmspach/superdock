@@ -20,58 +20,52 @@ class coreService
 			//TODO: check why mirror don't copy all files (think about RecursiveIteratorIterator in Filesystem )
 			//$filesystem->mirror('inc', $_ENV['SUPERDOCK_USER_DIR'] . '/.superdock/inc', null, ['override' => true, 'copy_on_windows' => true, 'delete' => true ] );
 			
-			if ( ! file_exists( $_ENV['SUPERDOCK_USER_DIR'] . '/.superdock' ) ) mkdir( $_ENV['SUPERDOCK_USER_DIR'] . '/.superdock', 0755 );
+			if ( ! file_exists( $_ENV['SUPERDOCK_USER_DIR'] . '/.superdock' ) ) mkdir( $_ENV['SUPERDOCK_USER_DIR'] . '/.superdock', 0777 );
 
-			$source = $_ENV['SUPERDOCK_CORE_DIR'] . "/inc";
+			$source = dirname(dirname(__DIR__)) . "/inc";
 			$dest= $_ENV['SUPERDOCK_USER_DIR'] . '/.superdock/inc';
-
-			if ( ! file_exists( $dest ) ) mkdir($dest, 0755);
-			foreach (
-			$iterator = new \RecursiveIteratorIterator(
-			new \RecursiveDirectoryIterator($source, \RecursiveDirectoryIterator::SKIP_DOTS),
-			\RecursiveIteratorIterator::SELF_FIRST) as $item
-			) {
-			if ($item->isDir()) {
-				if ( ! file_exists( $dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName() ) ) mkdir($dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
-			} else {
-				copy($item, $dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
-			}
+			if ( ! file_exists( $dest ) ) mkdir($dest, 0777);
+			$iterator = new \RecursiveIteratorIterator( new \RecursiveDirectoryIterator($source, \RecursiveDirectoryIterator::SKIP_DOTS), \RecursiveIteratorIterator::SELF_FIRST);
+			foreach ( $iterator as $item ) {
+				// if ( ! is_link( $dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName() ) ) {
+					if ($item->isDir()) {
+						if ( ! file_exists( $dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName() ) ) mkdir($dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
+					} else {
+						copy($item, $dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
+					}
+				// }
 			}
 
-			$source = $_ENV['SUPERDOCK_CORE_DIR'] . "/src";
+			$source = dirname(dirname(__DIR__)) . "/src";
 			$dest= $_ENV['SUPERDOCK_USER_DIR'] . '/.superdock/src';
-
-			if ( ! file_exists( $dest ) ) mkdir($dest, 0755);
-			foreach (
-			$iterator = new \RecursiveIteratorIterator(
-			new \RecursiveDirectoryIterator($source, \RecursiveDirectoryIterator::SKIP_DOTS),
-			\RecursiveIteratorIterator::SELF_FIRST) as $item
-			) {
-			if ($item->isDir()) {
-				if ( ! file_exists( $dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName() ) ) mkdir($dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
-			} else {
-				copy($item, $dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
-			}
+			if ( ! file_exists( $dest ) ) mkdir($dest, 0777);
+			$iterator = new \RecursiveIteratorIterator( new \RecursiveDirectoryIterator($source, \RecursiveDirectoryIterator::SKIP_DOTS), \RecursiveIteratorIterator::SELF_FIRST);
+			foreach ( $iterator as $item ) {
+				if ( ! is_link( $dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName() ) ) {
+					if ($item->isDir()) {
+						if ( ! file_exists( $dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName() ) ) mkdir($dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
+					} else {
+						copy($item, $dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
+					}
+				}
 			}
 
-			$source = $_ENV['SUPERDOCK_CORE_DIR'] . "/vendor";
+			$source = dirname(dirname(__DIR__)) . "/vendor";
 			$dest= $_ENV['SUPERDOCK_USER_DIR'] . '/.superdock/vendor';
-
-			if ( ! file_exists( $dest ) ) mkdir($dest, 0755);
-			foreach (
-			$iterator = new \RecursiveIteratorIterator(
-			new \RecursiveDirectoryIterator($source, \RecursiveDirectoryIterator::SKIP_DOTS),
-			\RecursiveIteratorIterator::SELF_FIRST) as $item
-			) {
-			if ($item->isDir()) {
-				if ( ! file_exists( $dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName() ) ) mkdir($dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
-			} else {
-				copy($item, $dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
-			}
+			if ( ! file_exists( $dest ) ) mkdir($dest, 0777);
+			$iterator = new \RecursiveIteratorIterator( new \RecursiveDirectoryIterator($source, \RecursiveDirectoryIterator::SKIP_DOTS), \RecursiveIteratorIterator::SELF_FIRST);
+			foreach ( $iterator as $item ) {
+				//if ( ! is_link( $dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName() ) ) {
+					if ($item->isDir()) {
+						if ( ! file_exists( $dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName() ) ) mkdir($dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
+					} else {
+						copy($item, $dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
+					}
+				//}
 			}
 
-			$filesystem->chmod( $_ENV['SUPERDOCK_USER_DIR'] . '/.superdock/vendor/deployer/deployer/bin/dep', 0755, 0000, false );
-			$filesystem->chmod( $_ENV['SUPERDOCK_USER_DIR'] . '/.superdock/inc/sh', 0755, 0000, true );
+			$filesystem->chmod( $_ENV['SUPERDOCK_USER_DIR'] . '/.superdock/vendor/deployer/deployer/bin/dep', 0777, 0000, false );
+			$filesystem->chmod( $_ENV['SUPERDOCK_USER_DIR'] . '/.superdock/inc/sh', 0777, 0000, true );
 
 		} catch (IOExceptionInterface $exception) {
 
