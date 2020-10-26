@@ -1,16 +1,17 @@
 sync:
   defaults:
+    mode: "one-way-safe"
+    stageMode: "neighboring"
     ignore:
       vcs: true
       paths:
-        - ".idea"
-        - .idea
-        - .DS_Store
+        - '.idea'
+        - '.idea'
+        - '.DS_Store'
         - '.sass-cache'
         - 'sass'
         - 'sass-cache'
-        - 'composer.json'
-        # - 'vendor'
+        - 'vendor'
         - 'package.json'
         - 'node_modules'
         - '.gitignore'
@@ -18,7 +19,12 @@ sync:
         - '*.coffee'
         - '*.scss'
         - '*.sass'
-        - '/web/sites/*/files'
+        - '/web/core'
+        - '/web/sites/*/files/css'
+        - '/web/sites/*/files/js'
+        - '/web/sites/*/files/php'
+        - '/web/sites/*/files/languages'
+        - '/web/sites/*/files/translations'
         - '/web/sites/*/private'
     permissions:
       defaultFileMode: 0644

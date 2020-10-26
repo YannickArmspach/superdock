@@ -8,7 +8,13 @@ services:
       dockerfile: ./docker/Dockerfile
     container_name: superdock_webserver
     restart: 'always'
-    stdin_open: false
+    # healthcheck:
+    #   test: ["CMD", "curl", "-f", "http://localhost"] 
+    #   interval: 10s
+    #   timeout: 10s
+    #   retries: 3
+    #   start_period: 10s
+    stdin_open: true
     tty: true
     networks:
       - superdock_network
@@ -26,7 +32,7 @@ services:
     volumes:
       # - superdock_sync:/var/www/html:nocopy
       # - ${SUPERDOCK_PROJECT_DIR}/:/var/www/html
-      - ${SUPERDOCK_PROJECT_DIR}/superdock/certificate/${SUPERDOCK_LOCAL_DOMAIN}:/etc/ssl/certs
+      - ${SUPERDOCK_PROJECT_DIR}/superdock/certificate/${SUPERDOCK_LOCAL_DOMAIN}:/etc/ssl/certs:ro
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_USER: ${SUPERDOCK_LOCAL_DB_USER}
@@ -41,7 +47,7 @@ services:
     image: mysql:8
     container_name: superdock_database
     restart: 'always'
-    stdin_open: false
+    stdin_open: true
     tty: true
     networks:
       - superdock_network
