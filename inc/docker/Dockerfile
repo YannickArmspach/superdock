@@ -68,44 +68,44 @@ RUN pecl install -o -f redis \
 &&  docker-php-ext-enable redis
 
 # php-v8js
-ENV V8_VERSION=7.4.288.21
-RUN apt-get update -y --fix-missing && apt-get upgrade -y;
-RUN apt-get install -y --no-install-recommends \
-    libtinfo5 libtinfo-dev \
-    build-essential \
-    curl \
-    git \
-    libglib2.0-dev \
-    libxml2 \
-    python \
-    patchelf \
-    && cd /tmp \
-    \
-    && git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git --progress --verbose \
-    && export PATH="$PATH:/tmp/depot_tools" \
-    \
-    && fetch v8 \
-    && cd v8 \
-    && git checkout $V8_VERSION \
-    && gclient sync \
-    \
-    && tools/dev/v8gen.py -vv x64.release -- is_component_build=true use_custom_libcxx=false
-RUN export PATH="$PATH:/tmp/depot_tools" \
-    && cd /tmp/v8 \
-    && ninja -C out.gn/x64.release/ \
-    && mkdir -p /opt/v8/lib && mkdir -p /opt/v8/include \
-    && cp out.gn/x64.release/lib*.so out.gn/x64.release/*_blob.bin out.gn/x64.release/icudtl.dat /opt/v8/lib/ \
-    && cp -R include/* /opt/v8/include/ \
-    && apt-get install patchelf \
-    && for A in /opt/v8/lib/*.so; do patchelf --set-rpath '$ORIGIN' $A;done
-RUN cd /tmp \
-    && git clone https://github.com/phpv8/v8js.git \
-    && cd v8js \
-    && git checkout 2.1.1 \
-    && phpize \
-    && ./configure --with-v8js=/opt/v8 LDFLAGS="-lstdc++" \
-    && make install
-RUN docker-php-ext-enable v8js
+# ENV V8_VERSION=7.4.288.21
+# RUN apt-get update -y --fix-missing && apt-get upgrade -y;
+# RUN apt-get install -y --no-install-recommends \
+#     libtinfo5 libtinfo-dev \
+#     build-essential \
+#     curl \
+#     git \
+#     libglib2.0-dev \
+#     libxml2 \
+#     python \
+#     patchelf \
+#     && cd /tmp \
+#     \
+#     && git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git --progress --verbose \
+#     && export PATH="$PATH:/tmp/depot_tools" \
+#     \
+#     && fetch v8 \
+#     && cd v8 \
+#     && git checkout $V8_VERSION \
+#     && gclient sync \
+#     \
+#     && tools/dev/v8gen.py -vv x64.release -- is_component_build=true use_custom_libcxx=false
+# RUN export PATH="$PATH:/tmp/depot_tools" \
+#     && cd /tmp/v8 \
+#     && ninja -C out.gn/x64.release/ \
+#     && mkdir -p /opt/v8/lib && mkdir -p /opt/v8/include \
+#     && cp out.gn/x64.release/lib*.so out.gn/x64.release/*_blob.bin out.gn/x64.release/icudtl.dat /opt/v8/lib/ \
+#     && cp -R include/* /opt/v8/include/ \
+#     && apt-get install patchelf \
+#     && for A in /opt/v8/lib/*.so; do patchelf --set-rpath '$ORIGIN' $A;done
+# RUN cd /tmp \
+#     && git clone https://github.com/phpv8/v8js.git \
+#     && cd v8js \
+#     && git checkout 2.1.1 \
+#     && phpize \
+#     && ./configure --with-v8js=/opt/v8 LDFLAGS="-lstdc++" \
+#     && make install
+# RUN docker-php-ext-enable v8js
 
 #Install node
 RUN curl -sL https://deb.nodesource.com/setup_12.x | bash
