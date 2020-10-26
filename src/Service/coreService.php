@@ -22,7 +22,7 @@ class coreService
 			
 			if ( ! file_exists( $_ENV['SUPERDOCK_USER_DIR'] . '/.superdock' ) ) mkdir( $_ENV['SUPERDOCK_USER_DIR'] . '/.superdock', 0755 );
 
-			$source = "./inc";
+			$source = "inc";
 			$dest= $_ENV['SUPERDOCK_USER_DIR'] . '/.superdock/inc';
 
 			if ( ! file_exists( $dest ) ) mkdir($dest, 0755);
@@ -38,7 +38,7 @@ class coreService
 			}
 			}
 
-			$source = "./src";
+			$source = "src";
 			$dest= $_ENV['SUPERDOCK_USER_DIR'] . '/.superdock/src';
 
 			if ( ! file_exists( $dest ) ) mkdir($dest, 0755);
@@ -54,7 +54,7 @@ class coreService
 			}
 			}
 
-			$source = "./vendor";
+			$source = "vendor";
 			$dest= $_ENV['SUPERDOCK_USER_DIR'] . '/.superdock/vendor';
 
 			if ( ! file_exists( $dest ) ) mkdir($dest, 0755);
