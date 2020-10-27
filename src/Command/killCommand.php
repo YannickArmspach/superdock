@@ -22,6 +22,8 @@ class killCommand extends Command
     public function execute(InputInterface $input, OutputInterface $output)
     {
 
+        coreService::getPassword( $input, $output );
+        
         coreService::process([ 
             $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/sh/kill.sh', 
             $_ENV['PASS'], 

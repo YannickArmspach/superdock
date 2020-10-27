@@ -11,7 +11,7 @@ sync:
         - '.sass-cache'
         - 'sass'
         - 'sass-cache'
-        - 'vendor'
+        # - 'vendor'
         - 'package.json'
         - 'node_modules'
         - '.gitignore'

@@ -8,16 +8,8 @@ services:
       dockerfile: ./docker/Dockerfile
     container_name: superdock_webserver
     restart: 'always'
-    # healthcheck:
-    #   test: ["CMD", "curl", "-f", "http://localhost"] 
-    #   interval: 10s
-    #   timeout: 10s
-    #   retries: 3
-    #   start_period: 10s
     stdin_open: true
     tty: true
-    networks:
-      - superdock_network
     depends_on:
       - database
       # - elasticsearch
@@ -30,9 +22,8 @@ services:
       # - mercure
       # - redis
     volumes:
-      # - superdock_sync:/var/www/html:nocopy
-      # - ${SUPERDOCK_PROJECT_DIR}/:/var/www/html
       - ${SUPERDOCK_PROJECT_DIR}/superdock/certificate/${SUPERDOCK_LOCAL_DOMAIN}:/etc/ssl/certs:ro
+      # - ${SUPERDOCK_PROJECT_DIR}/:/var/www/html
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_USER: ${SUPERDOCK_LOCAL_DB_USER}
@@ -49,8 +40,6 @@ services:
     restart: 'always'
     stdin_open: true
     tty: true
-    networks:
-      - superdock_network
     ports:
       - 3306:3306
     cap_add:
@@ -157,16 +146,9 @@ services:
   #       protocol: tcp
 
 volumes:
-  # superdock_sync:
-  #   external: true
   superdock_db:
     name: superdock_db_${SUPERDOCK_LOCAL_DB_NAME}
   # superdock_es: 
   #   name: superdock_es_${SUPERDOCK_LOCAL_DB_NAME}
   #   driver: local
   #   external: true
-
-networks:
-  superdock_network:
-    driver: bridge
-    external: true

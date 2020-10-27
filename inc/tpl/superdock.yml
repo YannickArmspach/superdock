@@ -1,0 +1,76 @@
+superdock:
+  v: 1.0.0
+  id: superdock
+  name: SuperDock
+  desc: Project Starter
+  links:
+    - www.superdock.dev|https://www.superdock.dev
+    - ppr.superdock.com|https://ppr.superdock.dev
+    - stg.superdock.com|https://stg.superdock.dev
+  team:
+    - lead:
+        name: lead
+        email: dev@superdock.dev
+    - back:
+        name: back
+        email: dev@superdock.dev
+    - front:
+        name: front
+        email: dev@superdock.dev
+    - cp:
+        name: cp
+        email: cp@superdock.dev    
+  
+  symfony:
+    version: 5
+    admin:
+      mail: dev@superdock.dev
+      user: dev 
+      pass: dev 
+    settings:
+      debug: true
+    libraries:
+      php: 7.3
+      database: mysql:8
+      xdebug: true
+      composer: true
+      node: false
+      v8js: false
+      elasticsearch: false
+      redis: false
+
+  # drupal:
+  #   version: 9
+  #   admin:
+  #     mail: dev@superdock.dev
+  #     user: dev 
+  #     pass: dev 
+  #   settings:
+  #     debug: true
+  #   libraries:
+  #     php: 7.3
+  #     database: mysql:8
+  #     xdebug: true
+  #     composer: true
+  #     node: false
+  #     v8js: false
+  #     elasticsearch: false
+  #     redis: false
+
+  # wordpress:
+  #   version: 5.4
+  #   admin:
+  #     mail: dev@superdock.dev
+  #     user: dev 
+  #     pass: dev 
+  #   settings:
+  #     debug: true
+  #   libraries:
+  #     php: 7.3
+  #     database: mysql:8
+  #     xdebug: true
+  #     composer: true
+  #     node: false
+  #     v8js: false
+  #     elasticsearch: false
+  #     redis: false

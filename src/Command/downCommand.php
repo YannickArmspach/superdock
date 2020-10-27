@@ -22,6 +22,8 @@ class downCommand extends Command
     public function execute(InputInterface $input, OutputInterface $output)
     {
 
+        coreService::getPassword( $input, $output );
+        
         coreService::process([ 
             'docker-compose', 
             '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 

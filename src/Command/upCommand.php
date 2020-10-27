@@ -7,6 +7,8 @@ use SuperDock\Service\coreService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\Question;
+use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\Process\Process;
 
 class upCommand extends Command
@@ -22,6 +24,8 @@ class upCommand extends Command
     public function execute(InputInterface $input, OutputInterface $output)
     {
 
+        coreService::getPassword( $input, $output );
+        
         if ( isset( $_ENV['SUPERDOCK_PROJECT_ID'] ) && $_ENV['SUPERDOCK_PROJECT_ID'] ) {
 
             coreService::process([ 
@@ -30,6 +34,13 @@ class upCommand extends Command
 				'755', 
 				$_ENV['SUPERDOCK_PROJECT_DIR'],
             ]);
+  
+            // coreService::process([ 
+            //     'open',
+            //     '--background',
+            //     '-a',
+            //     'Docker'
+            // ]);
 
             coreService::process([ 
                 'docker-compose', 
