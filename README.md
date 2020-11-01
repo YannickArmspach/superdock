@@ -7,8 +7,9 @@ local environment for symfony, drupal and wordpress, synchronize directories and
 
 ### Installation requirements:
 
-  - [x] [Docker](https://docs.docker.com/install/)
-  - [x] [Mutagen](https://mutagen.io/documentation/introduction/installationl)
+  - [x] [Docker](https://docs.docker.com/install/) Local environement
+  - [x] [Docker Machine](https://docs.docker.com/machine/install-machine/) CPU stability and better hibernation
+  - [x] [Mutagen](https://mutagen.io/documentation/introduction/installationl) File sync to speed up docker page load <2s
   
 ## install for users:
 ```sh
@@ -67,11 +68,11 @@ $ superdock deploy production
 ## Sync from*
 > Sync database and media from (staging/preproduction/production) to local
 ```sh
-$ superdock sync --from staging
+$ superdock sync [--from] staging
 
-$ superdock sync --from preproduction
+$ superdock sync [--from] preproduction
 
-$ superdock sync --from production
+$ superdock sync [--from] production
 ```
 
 ## Sync to*
