@@ -19,6 +19,8 @@ class infoCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        $output->writeln( coreService::start() );
+        
         if ( isset( $_ENV['SUPERDOCK_PROJECT_ID'] ) && $_ENV['SUPERDOCK_PROJECT_ID'] ) {
             $output->writeln( coreService::infos() );
             return Command::SUCCESS;

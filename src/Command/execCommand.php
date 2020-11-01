@@ -23,6 +23,8 @@ class execCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     { 
+        $output->writeln( coreService::start() );
+        
         coreService::process([ 
             'docker-compose', 
             '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 

@@ -2,6 +2,7 @@
 
 namespace SuperDock\Command;
 
+use SuperDock\Service\coreService;
 use SuperDock\Service\redmineService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -22,6 +23,7 @@ class initCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        $output->writeln( coreService::start() );
         
         $project_dir = $_ENV['SUPERDOCK_PROJECT_DIR'];
         $SUPERDOCK_PROJECT_ID = basename( $project_dir );

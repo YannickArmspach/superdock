@@ -89,6 +89,14 @@ class coreService
 		return false;	
 	}
 
+	static function start()
+	{
+		$output = PHP_EOL;
+		$output .= '<fg=black;bg=green> superdock </> v1.0.0' . PHP_EOL;
+		// $output .= PHP_EOL;
+		return $output;
+	}
+
 	static function infos( $title = "" )
 	{
 		$output = PHP_EOL;
@@ -100,32 +108,6 @@ class coreService
 		if( isset( $_ENV['SUPERDOCK_PRODUCTION_DOMAIN'] ) ) $output .= '<fg=green> production</> https://' . $_ENV['SUPERDOCK_PRODUCTION_DOMAIN'] . PHP_EOL;
 		return $output;
 		
-	}
-
-	static function env()
-	{
-		
-		$dotenv = new Dotenv();
-
-		if ( strlen(\Phar::running()) > 0 ) {
-			$dir = $_SERVER['HOME'] . '/.superdock';
-		} else {
-			$dir = dirname(dirname(__DIR__));
-		}
-		
-		$dotenv->populate([
-			'SUPERDOCK_CORE_DIR' => $dir,
-			'SUPERDOCK_USER_DIR' => $_SERVER['HOME'],
-			'SUPERDOCK_PROJECT_DIR' => $_SERVER['PWD'],
-			'SUPERDOCK_PROJECT_BASENAME' => basename( $_SERVER['PWD'] )
-		]);
-
-		if ( is_file( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/.superdock' ) ) $dotenv->load( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/.superdock');
-		if ( is_file( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/.env.local' ) ) $dotenv->load( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/.env.local');
-		if ( is_file( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/.env.staging' ) ) $dotenv->load( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/.env.staging');
-		if ( is_file( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/.env.preproduction' ) ) $dotenv->load( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/.env.preproduction');
-		if ( is_file( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/.env.production' ) ) $dotenv->load( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/.env.production');
-	
 	}
 
 	static function getPassword($input, $output)
@@ -169,9 +151,16 @@ class coreService
 		}	
 	}
 
-	static function process( $command = [] )
+	static function process( $command = [], $output = false  )
 	{
-		$process = new Process( $command, null, null, null, null, null );
+		$process = new Process( 
+			$command, 
+			null, 
+			$_ENV, 
+			null, 
+			null, 
+			null 
+		);
 		$process->setTty(Process::isTtySupported());
 		$process->run(function ($type, $buffer) {
 			if (Process::ERR === $type) {
@@ -180,6 +169,23 @@ class coreService
 				echo $buffer;
 			}
 		});
+		if ( $output ) return $process->getOutput();
+	}
+
+	static function command( $command = [], $output = false  )
+	{
+		$process = new Process( 
+			$command, 
+			null, 
+			$_ENV, 
+			null, 
+			null, 
+			null 
+		);
+		$process->setTty(Process::isTtySupported());
+		$process->start();
+		$process->wait();
+		if ( $output ) return $process->getOutput();
 	}
 
 }

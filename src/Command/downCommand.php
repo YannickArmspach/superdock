@@ -21,7 +21,8 @@ class downCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-
+        $output->writeln( coreService::start() );
+        
         coreService::getPassword( $input, $output );
         
         coreService::process([ 

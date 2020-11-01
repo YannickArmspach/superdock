@@ -2,6 +2,7 @@
 
 namespace SuperDock\Command;
 
+use SuperDock\Service\coreService;
 use SuperDock\Service\redmineService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -24,6 +25,7 @@ class newCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        $output->writeln( coreService::start() );
         
         $project_dir = $_ENV['SUPERDOCK_PROJECT_DIR'] . '/' . $input->getArgument('id');
 

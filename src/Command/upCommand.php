@@ -23,25 +23,35 @@ class upCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        $output->writeln( coreService::start() );
 
         coreService::getPassword( $input, $output );
         
         if ( isset( $_ENV['SUPERDOCK_PROJECT_ID'] ) && $_ENV['SUPERDOCK_PROJECT_ID'] ) {
 
-            coreService::process([ 
-				'chmod',
-				'-R',
-				'755', 
-				$_ENV['SUPERDOCK_PROJECT_DIR'],
-            ]);
-  
-            // coreService::process([ 
-            //     'open',
-            //     '--background',
-            //     '-a',
-            //     'Docker'
-            // ]);
+            //create certs
+            if ( ! file_exists( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/certificate/' . $_ENV['SUPERDOCK_LOCAL_DOMAIN'] . '/' . $_ENV['SUPERDOCK_LOCAL_DOMAIN'] . '.pem' ) ) 
+            {
+                coreService::process([ 
+                    $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/sh/cert.sh', 
+                    $_ENV['PASS'], 
+                    $_ENV['SUPERDOCK_LOCAL_DOMAIN'], 
+                    $_ENV['SUPERDOCK_CORE_DIR'], 
+                    $_ENV['SUPERDOCK_PROJECT_ID'], 
+                    $_ENV['SUPERDOCK_PROJECT_DIR'], 
+                ]);
+            }
 
+            //load env and create hosts
+            coreService::process([ 
+                $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/sh/env.sh', 
+                $_ENV['PASS'], 
+                $_ENV['SUPERDOCK_LOCAL_DOMAIN'], 
+                $_ENV['SUPERDOCK_CORE_DIR'], 
+                $_ENV['SUPERDOCK_PROJECT_ID'], 
+            ]);
+
+            //start docker composer
             coreService::process([ 
                 'docker-compose', 
                 '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml',
@@ -53,36 +63,15 @@ class upCommand extends Command
                 '--renew-anon-volumes',
             ]);
 
-            if ( ! file_exists( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/certificate/' . $_ENV['SUPERDOCK_LOCAL_DOMAIN'] . '/' . $_ENV['SUPERDOCK_LOCAL_DOMAIN'] . '.pem' ) ) {
-
-                coreService::process([ 
-                    $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/sh/cert.sh', 
-                    $_ENV['PASS'], 
-                    $_ENV['SUPERDOCK_LOCAL_DOMAIN'], 
-                    $_ENV['SUPERDOCK_CORE_DIR'], 
-                    $_ENV['SUPERDOCK_PROJECT_ID'], 
-                    $_ENV['SUPERDOCK_PROJECT_DIR'], 
-                ]);
-
-            }
-
-            coreService::process([ 
-                $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/sh/up.sh', 
-                $_ENV['PASS'], 
-                $_ENV['SUPERDOCK_LOCAL_DOMAIN'], 
-                $_ENV['SUPERDOCK_CORE_DIR'], 
-                $_ENV['SUPERDOCK_PROJECT_ID'], 
-            ]);
-
-            if ( isset( $_ENV['SUPERDOCK_MUTAGEN'] ) && $_ENV['SUPERDOCK_MUTAGEN'] ) {
-
+            //enable mutagen
+            if ( isset( $_ENV['SUPERDOCK_MUTAGEN'] ) && $_ENV['SUPERDOCK_MUTAGEN'] ) 
+            {
                 coreService::process([ 
                     'mutagen', 
                     'sync',
                     'terminate',
                     'superdock',
                 ]);
-
                 coreService::process([ 
                     'mutagen', 
                     '-c' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/mutagen.yml',
@@ -93,14 +82,11 @@ class upCommand extends Command
                     $_ENV['SUPERDOCK_PROJECT_DIR'],
                     'docker://root@superdock_webserver/var/www/html',
                 ]);
-                
-                function mutagen_connect_retry( ) {
-
+                function mutagen_connect_retry( ) 
+                {
                     $process = new Process( [ 'mutagen', 'sync', 'list' ], null, null, null, null, null );
                     $process->start();
-
                     $process->wait();
-
                     if( strpos( $process->getOutput(), 'Watching for changes' ) !== false ) {
                         echo "Mutagen connected" . PHP_EOL;
                         return false;
@@ -108,47 +94,44 @@ class upCommand extends Command
                        echo "Waiting mutagen start..." . PHP_EOL;
                        return true;
                     }
-
                 }
-
                 $active = true;
                 while($active) {
                     $active = mutagen_connect_retry();
                     sleep(5);
                 }
-
-                coreService::process([ 
-                    'docker-compose', 
-                    '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
-                    'exec', 
-                    'webserver', 
-                    'sh', 
-                    '-c', 
-                    'chown -R www-data:www-data /var/www/html/web/sites/default/files'
-                ]);
-
-                coreService::process([ 
-                    'docker-compose', 
-                    '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
-                    'exec', 
-                    'webserver', 
-                    'sh', 
-                    '-c', 
-                    'chmod -R 777 /var/www/html/web/sites/default/files'
-                ]);
-
-                coreService::process([ 
-                    'docker-compose', 
-                    '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
-                    'exec', 
-                    'webserver', 
-                    'sh', 
-                    '-c', 
-                    'composer install --prefer-dist --no-progress --no-ansi --no-interaction'
-                ]);
-
             }
 
+            //composer install
+            coreService::process([ 
+                'docker-compose', 
+                '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
+                'exec', 
+                'webserver', 
+                'sh', 
+                '-c', 
+                'composer install --prefer-dist --no-progress --no-ansi --no-interaction'
+            ]);
+
+            //drupal
+            coreService::process([ 
+                'docker-compose', 
+                '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
+                'exec', 
+                'webserver', 
+                'sh', 
+                '-c', 
+                'chown -R www-data:www-data /var/www/html/web/sites/default/files'
+            ]);
+            coreService::process([ 
+                'docker-compose', 
+                '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
+                'exec', 
+                'webserver', 
+                'sh', 
+                '-c', 
+                'chmod -R 777 /var/www/html/web/sites/default/files'
+            ]);
             coreService::process([ 
                 'docker-compose', 
                 '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 

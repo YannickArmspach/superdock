@@ -22,7 +22,8 @@ class logsCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-
+        $output->writeln( coreService::start() );
+        
         if ( isset( $_ENV['SUPERDOCK_PROJECT_ID'] ) && $_ENV['SUPERDOCK_PROJECT_ID'] ) {
 
             coreService::process([ 

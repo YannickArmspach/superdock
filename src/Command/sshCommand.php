@@ -22,6 +22,8 @@ class sshCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        $output->writeln( coreService::start() );
+        
         switch ( $input->getArgument('env') ) {
             case 'local':
                 coreService::process([ 

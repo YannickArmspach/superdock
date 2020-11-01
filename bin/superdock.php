@@ -19,8 +19,13 @@ use SuperDock\Command\initCommand;
 use SuperDock\Command\logsCommand;
 use SuperDock\Command\watchCommand;
 use SuperDock\Service\coreService;
+use SuperDock\Service\envService;
 
-coreService::env();
+$envService = new envService();
+$envService->init();
+$envService->docker();
+// $envService->password(); //TODO: prompt pass on CLI load
+
 coreService::dir();
 
 $app = new Application('SUPERDOCK', 'v1.0.0');

@@ -26,7 +26,8 @@ class syncCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-
+        $output->writeln( coreService::start() );
+        
         if ( $input->getOption('to') == true ) {
 
             $cmd = [ 

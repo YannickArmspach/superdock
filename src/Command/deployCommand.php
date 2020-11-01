@@ -24,6 +24,8 @@ class deployCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     { 
+        $output->writeln( coreService::start() );
+        
         $cmd = [
             $_ENV['SUPERDOCK_CORE_DIR'] . '/vendor/deployer/deployer/bin/dep', 
             '--file=' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/dep/deploy.' . $_ENV['SUPERDOCK_PROJECT_TYPE'] . '.php', 

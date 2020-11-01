@@ -2,6 +2,7 @@
 
 namespace SuperDock\Command;
 
+use SuperDock\Service\coreService;
 use SuperDock\Service\redmineService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -21,7 +22,8 @@ class redmineCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-
+        $output->writeln( coreService::start() );
+        
         $output->writeln( 'redmine:' . $input->getArgument('projects') );
 
         dump( redmineService::getProjectList() );
