@@ -3,9 +3,10 @@
 namespace Deployer;
 
 use Symfony\Component\Process\Process;
-use SuperDock\Service\coreService;
+use SuperDock\Service\envService;
 
-coreService::env();
+$envService = new envService();
+$envService->init();
 
 require 'recipe/common.php';
 require 'hosts.php';

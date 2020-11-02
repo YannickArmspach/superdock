@@ -2,9 +2,10 @@
 
 namespace Deployer;
 
-use SuperDock\Service\coreService;
+use SuperDock\Service\envService;
 
-coreService::env();
+$envService = new envService();
+$envService->init();
 
 if ( isset( $_ENV['SUPERDOCK_STAGING_SSH_IP'] ) ) {
 	host('staging')
