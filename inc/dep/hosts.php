@@ -6,6 +6,7 @@ use SuperDock\Service\envService;
 
 $envService = new envService();
 $envService->init();
+$envService->docker();
 
 if ( isset( $_ENV['SUPERDOCK_STAGING_SSH_IP'] ) ) {
 	host('staging')

@@ -7,6 +7,7 @@ use SuperDock\Service\envService;
 
 $envService = new envService();
 $envService->init();
+$envService->docker();
 
 require 'recipe/common.php';
 require 'hosts.php';
