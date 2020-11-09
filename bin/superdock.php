@@ -4,6 +4,7 @@ require_once dirname( __DIR__ ) . '/vendor/autoload.php';
 
 use Symfony\Component\Console\Application; 
 use SuperDock\Command\buildCommand;
+use SuperDock\Command\clearCommand;
 use SuperDock\Command\coreCommand;
 use SuperDock\Command\deployCommand;
 use SuperDock\Command\downCommand;
@@ -36,6 +37,7 @@ if ( is_file( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/.superdock' )  )
 {
     $app->add(new execCommand());
     $app->add(new buildCommand());
+    $app->add(new clearCommand());
     $app->add(new logsCommand());
     $app->add(new sshCommand());
     $app->add(new upCommand());

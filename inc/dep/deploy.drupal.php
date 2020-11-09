@@ -196,7 +196,7 @@ task('deploy', [
     'deploy:shared',
     'deploy:writable',
 	'deploy:chown',
-	'deploy:drupal:cc',
+	// 'deploy:drupal:cc',
     'deploy:symlink',
     'deploy:unlock',
     'cleanup',

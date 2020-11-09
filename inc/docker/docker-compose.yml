@@ -33,6 +33,7 @@ services:
       SUPERDOCK_LOCAL_DIR_PUBLIC: ${SUPERDOCK_LOCAL_DIR_PUBLIC}
       SUPERDOCK_PROJECT_BASENAME: ${SUPERDOCK_PROJECT_BASENAME}
       SUPERDOCK_LOCAL_DOMAIN: ${SUPERDOCK_LOCAL_DOMAIN}
+      SUPERDOCK_V8JS: ${SUPERDOCK_V8JS}
 
   database:
     image: mysql:8
@@ -98,14 +99,12 @@ services:
   #   ports:
   #     - 5601:5601
 
-  # adminer:
-  #   image: adminer
-  #   container_name: superdock_adminer
-  #   restart: always
-  #   networks:
-  #     - superdock_network
-  #   ports:
-  #     - 8080:8080
+  adminer:
+    image: adminer
+    container_name: superdock_adminer
+    restart: always
+    ports:
+      - 8080:8080
 
   # mailcatcher:
   #   image: schickling/mailcatcher

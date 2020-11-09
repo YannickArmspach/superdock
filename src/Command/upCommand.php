@@ -29,6 +29,13 @@ class upCommand extends Command
         
         if ( isset( $_ENV['SUPERDOCK_PROJECT_ID'] ) && $_ENV['SUPERDOCK_PROJECT_ID'] ) {
 
+            // coreService::process([ 
+			// 	'chmod',
+			// 	'-R',
+			// 	'755', 
+			// 	$_ENV['SUPERDOCK_PROJECT_DIR'],
+            // ]);
+
             //create certs
             if ( ! file_exists( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/certificate/' . $_ENV['SUPERDOCK_LOCAL_DOMAIN'] . '/' . $_ENV['SUPERDOCK_LOCAL_DOMAIN'] . '.pem' ) ) 
             {
@@ -88,10 +95,10 @@ class upCommand extends Command
                     $process->start();
                     $process->wait();
                     if( strpos( $process->getOutput(), 'Watching for changes' ) !== false ) {
-                        echo "Mutagen connected" . PHP_EOL;
+                        echo "✔ Mutagen connected" . PHP_EOL;
                         return false;
                     } else{
-                       echo "Waiting mutagen start..." . PHP_EOL;
+                       echo "➤ Waiting mutagen start..." . PHP_EOL;
                        return true;
                     }
                 }

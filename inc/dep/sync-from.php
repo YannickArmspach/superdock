@@ -34,6 +34,9 @@ task('sync:format', function () {
 });
 
 task('sync:install', function () {
+    echo "➤ Wait database sync to docker" . PHP_EOL;
+    sleep(5);
+    echo "➤ Starting database install" . PHP_EOL;
     coreService::process([ 
         'docker-compose', 
         '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
