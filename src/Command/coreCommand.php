@@ -24,9 +24,6 @@ class coreCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-
-        envService::docker();
-
         switch ( $input->getArgument('action') ){
             case 'install':
                 coreService::install();
@@ -38,8 +35,6 @@ class coreCommand extends Command
                 coreService::uninstall();
             break;
         }
-
         return Command::SUCCESS;
-
     }
 }
