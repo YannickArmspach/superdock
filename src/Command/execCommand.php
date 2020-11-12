@@ -3,6 +3,7 @@
 namespace SuperDock\Command;
 
 use SuperDock\Service\coreService;
+use SuperDock\Service\envService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -25,6 +26,8 @@ class execCommand extends Command
     { 
         $output->writeln( coreService::start() );
         
+        envService::docker();
+
         coreService::process([ 
             'docker-compose', 
             '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 

@@ -3,6 +3,7 @@
 namespace SuperDock\Command;
 
 use SuperDock\Service\coreService;
+use SuperDock\Service\envService;
 use SuperDock\Service\notifService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -22,6 +23,8 @@ class clearCommand extends Command
     {
         $output->writeln( coreService::start() );
         
+        envService::docker();
+
         if ( isset( $_ENV['SUPERDOCK_PROJECT_ID'] ) && $_ENV['SUPERDOCK_PROJECT_ID'] ) {
 
             switch ( $_ENV['SUPERDOCK_PROJECT_TYPE'] ) {

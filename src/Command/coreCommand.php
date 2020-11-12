@@ -4,6 +4,7 @@ namespace SuperDock\Command;
 
 use icanhazstring\SymfonyConsoleSpinner\SpinnerProgress;
 use SuperDock\Service\coreService;
+use SuperDock\Service\envService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -23,6 +24,9 @@ class coreCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
+
+        envService::docker();
+
         switch ( $input->getArgument('action') ){
             case 'install':
                 coreService::install();
@@ -34,6 +38,8 @@ class coreCommand extends Command
                 coreService::uninstall();
             break;
         }
+
         return Command::SUCCESS;
+
     }
 }

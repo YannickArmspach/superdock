@@ -66,54 +66,54 @@ RUN pecl install -o -f redis \
 &&  rm -rf /tmp/pear \
 &&  docker-php-ext-enable redis
 
-ARG SUPERDOCK_V8JS=true
+# ARG SUPERDOCK_V8JS=true
 
-ENV V8_VERSION=7.4.288.21
-RUN if [ ${SUPERDOCK_V8JS} = true ]; then \
-    apt-get update -y --fix-missing && apt-get upgrade -y; \
-    apt-get install -y --no-install-recommends \
-    libtinfo5 libtinfo-dev \
-    build-essential \
-    curl \
-    git \
-    libglib2.0-dev \
-    libxml2 \
-    python \
-    patchelf \
-    && cd /tmp \
-    \
-    && git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git --progress --verbose \
-    && export PATH="$PATH:/tmp/depot_tools" \
-    \
-    && fetch v8 \
-    && cd v8 \
-    && git checkout $V8_VERSION \
-    && gclient sync \
-    \
-    && tools/dev/v8gen.py -vv x64.release -- is_component_build=true use_custom_libcxx=false \
-    ;fi
-RUN if [ ${SUPERDOCK_V8JS} = true ]; then \
-    export PATH="$PATH:/tmp/depot_tools" \
-    && cd /tmp/v8 \
-    && ninja -C out.gn/x64.release/ \
-    && mkdir -p /opt/v8/lib && mkdir -p /opt/v8/include \
-    && cp out.gn/x64.release/lib*.so out.gn/x64.release/*_blob.bin out.gn/x64.release/icudtl.dat /opt/v8/lib/ \
-    && cp -R include/* /opt/v8/include/ \
-    && apt-get install patchelf \
-    && for A in /opt/v8/lib/*.so; do patchelf --set-rpath '$ORIGIN' $A;done \
-    ;fi
-RUN if [ ${SUPERDOCK_V8JS} = true ]; then \
-    cd /tmp \
-    && git clone https://github.com/phpv8/v8js.git \
-    && cd v8js \
-    && git checkout 2.1.1 \
-    && phpize \
-    && ./configure --with-v8js=/opt/v8 LDFLAGS="-lstdc++" \
-    && make install \
-    ;fi
-RUN if [ ${SUPERDOCK_V8JS} = true ]; then \
-    docker-php-ext-enable v8js \
-    ;fi
+# ENV V8_VERSION=7.4.288.21
+# RUN if [ ${SUPERDOCK_V8JS} = true ]; then \
+#     apt-get update -y --fix-missing && apt-get upgrade -y; \
+#     apt-get install -y --no-install-recommends \
+#     libtinfo5 libtinfo-dev \
+#     build-essential \
+#     curl \
+#     git \
+#     libglib2.0-dev \
+#     libxml2 \
+#     python \
+#     patchelf \
+#     && cd /tmp \
+#     \
+#     && git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git --progress --verbose \
+#     && export PATH="$PATH:/tmp/depot_tools" \
+#     \
+#     && fetch v8 \
+#     && cd v8 \
+#     && git checkout $V8_VERSION \
+#     && gclient sync \
+#     \
+#     && tools/dev/v8gen.py -vv x64.release -- is_component_build=true use_custom_libcxx=false \
+#     ;fi
+# RUN if [ ${SUPERDOCK_V8JS} = true ]; then \
+#     export PATH="$PATH:/tmp/depot_tools" \
+#     && cd /tmp/v8 \
+#     && ninja -C out.gn/x64.release/ \
+#     && mkdir -p /opt/v8/lib && mkdir -p /opt/v8/include \
+#     && cp out.gn/x64.release/lib*.so out.gn/x64.release/*_blob.bin out.gn/x64.release/icudtl.dat /opt/v8/lib/ \
+#     && cp -R include/* /opt/v8/include/ \
+#     && apt-get install patchelf \
+#     && for A in /opt/v8/lib/*.so; do patchelf --set-rpath '$ORIGIN' $A;done \
+#     ;fi
+# RUN if [ ${SUPERDOCK_V8JS} = true ]; then \
+#     cd /tmp \
+#     && git clone https://github.com/phpv8/v8js.git \
+#     && cd v8js \
+#     && git checkout 2.1.1 \
+#     && phpize \
+#     && ./configure --with-v8js=/opt/v8 LDFLAGS="-lstdc++" \
+#     && make install \
+#     ;fi
+# RUN if [ ${SUPERDOCK_V8JS} = true ]; then \
+#     docker-php-ext-enable v8js \
+#     ;fi
 
 # if SUPERDOCK_NODE=true
 #Install node
@@ -143,6 +143,13 @@ RUN a2enmod rewrite \
     && a2enmod proxy_http \
     && a2enmod ssl
 
+#install certbot, sendmail and ssmtp for ssl and mails
+RUN apt-get install software-properties-common -y && \
+    apt-get update --fix-missing && \
+    apt-add-repository -r ppa:certbot/certbot -y && \
+    apt-get update --fix-missing && \
+    apt-get install python-certbot-apache -y
+
 # PHP sessions
 RUN mkdir -p /var/lib/php/sessions && chown -R www-data /var/lib/php && chmod -R 775 /var/lib/php/sessions
 
@@ -164,3 +171,7 @@ RUN usermod -u 1000 www-data
 RUN usermod -G staff www-data
 
 CMD ["apache2-foreground"]
+
+# COPY docker/entrypoint.sh /
+# RUN chmod +x /entrypoint.sh
+# ENTRYPOINT ["/entrypoint.sh", ${SUPERDOCK_LOCAL_DOMAIN} ]

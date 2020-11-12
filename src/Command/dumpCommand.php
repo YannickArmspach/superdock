@@ -9,36 +9,35 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Process\Process;
 
-class deployCommand extends Command
+class dumpCommand extends Command
 {
     
-    protected static $defaultName = 'deploy';
+    protected static $defaultName = 'dump';
 
     public function configure()
     {
-        $this->setDescription('Deploy code')
-        ->addArgument('env', InputArgument::REQUIRED, 'environement')
-        ->addOption('debug', null, InputOption::VALUE_NONE, 'verbose');
+        $this->setDescription('Syncronyse environements')
+             ->addArgument('env', InputArgument::REQUIRED, 'environement')
+             ->addOption('debug', null, InputOption::VALUE_NONE, 'verbose');
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
-    { 
+    {
         $output->writeln( coreService::start() );
         
         envService::docker();
 
-        $cmd = [
+        $cmd = [ 
             $_ENV['SUPERDOCK_CORE_DIR'] . '/vendor/deployer/deployer/bin/dep', 
-            '--file=' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/dep/deploy.' . $_ENV['SUPERDOCK_PROJECT_TYPE'] . '.php', 
-            'deploy',
+            '--file=' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/dep/dump.php', 
+            'dump',
             $input->getArgument('env')
         ];
         if ( $input->getOption('debug') ) array_push( $cmd, '-vvv' ); 
         coreService::process($cmd);
-        $output->writeln( coreService::infos( 'Code was successfully deploy to the ' . $input->getArgument('env') . ' environement' ) );
-    
+        $output->writeln( coreService::infos( 'The ' . $input->getArgument('env') . ' environement has been successfully saved in superdock/database/' . $input->getArgument('env') . '/dump.sql' ) );
+
         return Command::SUCCESS;
     }
 }

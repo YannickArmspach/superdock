@@ -4,6 +4,7 @@ namespace SuperDock\Command;
 
 use icanhazstring\SymfonyConsoleSpinner\SpinnerProgress;
 use SuperDock\Service\coreService;
+use SuperDock\Service\envService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -25,6 +26,8 @@ class downCommand extends Command
         
         coreService::getPassword( $input, $output );
         
+        envService::docker();
+
         coreService::process([ 
             'docker-compose', 
             '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 

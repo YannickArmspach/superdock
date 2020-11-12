@@ -3,6 +3,7 @@
 namespace SuperDock\Command;
 
 use SuperDock\Service\coreService;
+use SuperDock\Service\envService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -21,6 +22,8 @@ class infoCommand extends Command
     {
         $output->writeln( coreService::start() );
         
+        envService::docker();
+
         if ( isset( $_ENV['SUPERDOCK_PROJECT_ID'] ) && $_ENV['SUPERDOCK_PROJECT_ID'] ) {
             $output->writeln( coreService::infos() );
             return Command::SUCCESS;

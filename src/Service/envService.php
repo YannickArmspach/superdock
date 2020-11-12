@@ -12,14 +12,7 @@ use Symfony\Component\Console\Question\Question;
 class envService
 {
 
-	private $dotenv;
-
-	public function __construct()
-	{
-		$this->dotenv = new Dotenv();
-	}
-
-	public function init()
+	static function init()
 	{
 		
 		if ( strlen(\Phar::running()) > 0 ) {
@@ -28,57 +21,90 @@ class envService
 			$dir = dirname(dirname(__DIR__));
 		}
 		
-		$this->dotenv->populate([
+		$dotenv = new Dotenv();
+
+		$dotenv->populate([
 			'SUPERDOCK_CORE_DIR' => $dir,
 			'SUPERDOCK_USER_DIR' => $_SERVER['HOME'],
 			'SUPERDOCK_PROJECT_DIR' => $_SERVER['PWD'],
 			'SUPERDOCK_PROJECT_BASENAME' => basename( $_SERVER['PWD'] ),
 		]);
 
-		if ( is_file( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/.superdock' ) ) $this->dotenv->load( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/.superdock');
-		if ( is_file( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/.env.local' ) ) $this->dotenv->load( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/.env.local');
-		if ( is_file( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/.env.staging' ) ) $this->dotenv->load( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/.env.staging');
-		if ( is_file( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/.env.preproduction' ) ) $this->dotenv->load( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/.env.preproduction');
-		if ( is_file( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/.env.production' ) ) $this->dotenv->load( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/.env.production');
+		if ( is_file( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/.superdock' ) ) $dotenv->load( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/.superdock');
+		if ( is_file( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/.env.local' ) ) $dotenv->load( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/.env.local');
+		if ( is_file( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/.env.staging' ) ) $dotenv->load( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/.env.staging');
+		if ( is_file( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/.env.preproduction' ) ) $dotenv->load( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/.env.preproduction');
+		if ( is_file( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/.env.production' ) ) $dotenv->load( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/.env.production');
 	
 	}
 
-	public function password($input, $output)
+	static function password($input, $output)
 	{
+		//TODO: prompt and save pass one time on CLI start (by mac keychain ?)
 		// $helper = new QuestionHelper();
         // $questionPass = new Question('Password: ' );
         // $questionPass->setHidden(true);
         // $questionPass->setHiddenFallback(false);
         // $SUPERDOCK_PASS = $helper->ask($input, $output, $questionPass);
-		// $this->dotenv->populate([ 'PASS' => $SUPERDOCK_PASS ]);
+		// $dotenv->populate([ 'PASS' => $SUPERDOCK_PASS ]);
 	}
 
-	public function docker() {
+	static function docker( $docker_machine_driver = 'superdock' ) {
+
+		$dotenv = new Dotenv();
+
+		if ( $docker_machine_driver == 'digitalocean' ) {
+		
+			$docker_machine_id = 'docker.' . $_ENV['SUPERDOCK_PROJECT_ID'];
+
+			coreService::process([ 
+				'docker-machine', 
+				'create',
+				'--driver', 
+				'digitalocean', 
+				'--digitalocean-image', 
+				$_ENV['SUPERDOCK_STAGING_DIGITALOCEAN_DOKER_IMAGE'],
+				'--digitalocean-size',
+				$_ENV['SUPERDOCK_STAGING_DIGITALOCEAN_DOKER_SIZE'],
+				'--digitalocean-ssh-key-fingerprint',
+				$_ENV['SUPERDOCK_STAGING_DIGITALOCEAN_SSH_FINGERPRINT'],
+				'--digitalocean-access-token',
+				$_ENV['SUPERDOCK_STAGING_DIGITALOCEAN_TOKEN'],
+				$docker_machine_id
+			]);
+		
+		} else {
+
+			$docker_machine_id = 'superdock';
 			
-		coreService::process([ 
-			'docker-machine', 
-			'create',
-			'--driver', 
-			'virtualbox', 
-			'superdock',
-		]);
+			coreService::process([ 
+				'docker-machine', 
+				'create',
+				'--driver', 
+				'virtualbox', 
+				'--virtualbox-disk-size',
+				'60000',
+				$docker_machine_id
+			]);
+		
+		}
 		coreService::process([ 
 			'docker-machine', 
 			'start',
-			'superdock',
+			$docker_machine_id,
 		]);
 
 		$env = [];
 		$env['DOCKER_TLS_VERIFY'] = 0;
 		$env['DOCKER_HOST'] = 0;
 		$env['DOCKER_CERT_PATH'] = 0;
-		$env['DOCKER_MACHINE_NAME'] = "superdock";
+		$env['DOCKER_MACHINE_NAME'] = $docker_machine_id;
 
 		$process = new Process( 
 			[ 
 				'docker-machine',
 				'config',
-				'superdock',
+				$docker_machine_id,
 			], 
 			null, 
 			null, 
@@ -108,7 +134,7 @@ class envService
 			}
 		}
 
-		$this->dotenv->populate( $env );
+		$dotenv->populate( $env );
 
 	}
 

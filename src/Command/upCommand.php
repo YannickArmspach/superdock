@@ -4,6 +4,7 @@ namespace SuperDock\Command;
 
 use icanhazstring\SymfonyConsoleSpinner\SpinnerProgress;
 use SuperDock\Service\coreService;
+use SuperDock\Service\envService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -26,15 +27,10 @@ class upCommand extends Command
         $output->writeln( coreService::start() );
 
         coreService::getPassword( $input, $output );
+
+        envService::docker();
         
         if ( isset( $_ENV['SUPERDOCK_PROJECT_ID'] ) && $_ENV['SUPERDOCK_PROJECT_ID'] ) {
-
-            // coreService::process([ 
-			// 	'chmod',
-			// 	'-R',
-			// 	'755', 
-			// 	$_ENV['SUPERDOCK_PROJECT_DIR'],
-            // ]);
 
             //create certs
             if ( ! file_exists( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/certificate/' . $_ENV['SUPERDOCK_LOCAL_DOMAIN'] . '/' . $_ENV['SUPERDOCK_LOCAL_DOMAIN'] . '.pem' ) ) 
@@ -109,46 +105,60 @@ class upCommand extends Command
                 }
             }
 
-            //composer install
-            coreService::process([ 
-                'docker-compose', 
-                '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
-                'exec', 
-                'webserver', 
-                'sh', 
-                '-c', 
-                'composer install --prefer-dist --no-progress --no-ansi --no-interaction'
-            ]);
-
-            //drupal
-            coreService::process([ 
-                'docker-compose', 
-                '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
-                'exec', 
-                'webserver', 
-                'sh', 
-                '-c', 
-                'chown -R www-data:www-data /var/www/html/web/sites/default/files'
-            ]);
-            coreService::process([ 
-                'docker-compose', 
-                '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
-                'exec', 
-                'webserver', 
-                'sh', 
-                '-c', 
-                'chmod -R 777 /var/www/html/web/sites/default/files'
-            ]);
-            coreService::process([ 
-                'docker-compose', 
-                '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
-                'exec', 
-                'webserver', 
-                'sh', 
-                '-c', 
-                'php vendor/bin/drush cache:rebuild'
-            ]);
-
+            switch ( $_ENV['SUPERDOCK_PROJECT_TYPE'] ) {
+                case 'symfony':
+                    coreService::process([ 
+                        'docker-compose', 
+                        '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
+                        'exec', 
+                        'webserver', 
+                        'sh', 
+                        '-c', 
+                        'composer install --prefer-dist --no-progress --no-ansi --no-interaction -vvv'
+                    ]);
+                break;
+                case 'drupal':
+                    coreService::process([ 
+                        'docker-compose', 
+                        '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
+                        'exec', 
+                        'webserver', 
+                        'sh', 
+                        '-c', 
+                        'composer install --prefer-dist --no-progress --no-ansi --no-interaction -vvv'
+                    ]);
+                    coreService::process([ 
+                        'docker-compose', 
+                        '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
+                        'exec', 
+                        'webserver', 
+                        'sh', 
+                        '-c', 
+                        'chown -R www-data:www-data /var/www/html/web/sites/default/files'
+                    ]);
+                    coreService::process([ 
+                        'docker-compose', 
+                        '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
+                        'exec', 
+                        'webserver', 
+                        'sh', 
+                        '-c', 
+                        'chmod -R 777 /var/www/html/web/sites/default/files'
+                    ]);
+                    coreService::process([ 
+                        'docker-compose', 
+                        '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
+                        'exec', 
+                        'webserver', 
+                        'sh', 
+                        '-c', 
+                        'php vendor/bin/drush cache:rebuild'
+                    ]);
+                break;
+                case 'wordpress':
+                break;
+            }
+            
             $output->writeln( coreService::infos() );
             
             return Command::SUCCESS;

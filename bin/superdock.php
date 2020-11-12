@@ -13,6 +13,7 @@ use SuperDock\Command\infoCommand;
 use SuperDock\Command\newCommand;
 use SuperDock\Command\redmineCommand;
 use SuperDock\Command\syncCommand;
+use SuperDock\Command\dumpCommand;
 use SuperDock\Command\upCommand;
 use SuperDock\Command\sshCommand;
 use SuperDock\Command\killCommand;
@@ -22,11 +23,7 @@ use SuperDock\Command\watchCommand;
 use SuperDock\Service\coreService;
 use SuperDock\Service\envService;
 
-$envService = new envService();
-$envService->init();
-$envService->docker();
-// $envService->password(); //TODO: prompt pass on CLI load
-
+envService::init();
 coreService::dir();
 
 $app = new Application('SUPERDOCK', 'v1.0.0');
@@ -45,6 +42,7 @@ if ( is_file( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/.superdock' )  )
     $app->add(new downCommand());
     $app->add(new deployCommand());
     $app->add(new syncCommand());
+    $app->add(new dumpCommand());
     $app->add(new redmineCommand());
 }
 

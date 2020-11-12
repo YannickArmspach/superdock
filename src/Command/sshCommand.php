@@ -3,6 +3,7 @@
 namespace SuperDock\Command;
 
 use SuperDock\Service\coreService;
+use SuperDock\Service\envService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -23,6 +24,8 @@ class sshCommand extends Command
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $output->writeln( coreService::start() );
+
+        envService::docker();
         
         switch ( $input->getArgument('env') ) {
             case 'local':
