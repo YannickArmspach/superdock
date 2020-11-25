@@ -32,6 +32,7 @@ set('rsync', function () {
 			$SUPERDOCK['SOURCE_UPLOAD'],
 			'.git',
 			'.temp',
+			'node_modules',
 			'.env',
 			'.env.local',
 			'.env.staging',

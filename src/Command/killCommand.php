@@ -29,10 +29,41 @@ class killCommand extends Command
         envService::docker();
 
         coreService::process([ 
+            'docker-compose', 
+            '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
+            'down', 
+            '--remove-orphans' 
+        ]);
+
+        coreService::process([ 
+            'mutagen', 
+            'sync',
+            'terminate',
+            'superdock',
+        ]);
+        
+        coreService::process([ 
+            $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/sh/down.sh', 
+            $_ENV['PASS'], 
+        ]);
+
+        coreService::process([ 
             $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/sh/kill.sh', 
             $_ENV['PASS'], 
         ]);
-        
+            
+        coreService::process([ 
+            'mutagen', 
+            'daemon',
+            'stop',
+        ]);
+
+        coreService::process([ 
+            'docker-machine', 
+            'stop',
+            'superdock',
+        ]);
+
         $output->writeln( '<fg=black;bg=green> RHAAAAHH </> You killed them all. Now, you can start fresh and zen ;)' );
         return Command::SUCCESS;
     }

@@ -19,7 +19,8 @@ use SuperDock\Command\sshCommand;
 use SuperDock\Command\killCommand;
 use SuperDock\Command\initCommand;
 use SuperDock\Command\logsCommand;
-use SuperDock\Command\watchCommand;
+use SuperDock\Command\serverCommand;
+// use SuperDock\Command\watchCommand;
 use SuperDock\Service\coreService;
 use SuperDock\Service\envService;
 
@@ -38,8 +39,9 @@ if ( is_file( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/.superdock' )  )
     $app->add(new logsCommand());
     $app->add(new sshCommand());
     $app->add(new upCommand());
-    $app->add(new watchCommand());
+    // $app->add(new watchCommand());
     $app->add(new downCommand());
+    $app->add(new serverCommand());
     $app->add(new deployCommand());
     $app->add(new syncCommand());
     $app->add(new dumpCommand());

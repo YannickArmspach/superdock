@@ -29,6 +29,24 @@ class clearCommand extends Command
 
             switch ( $_ENV['SUPERDOCK_PROJECT_TYPE'] ) {
                 case 'symfony':
+                    coreService::process([ 
+                        'docker-compose', 
+                        '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
+                        'exec', 
+                        'webserver', 
+                        'sh', 
+                        '-c', 
+                        'chmod -R 777 var'
+                    ]);
+                    coreService::process([ 
+                        'docker-compose', 
+                        '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
+                        'exec', 
+                        'webserver', 
+                        'sh', 
+                        '-c', 
+                        'php bin/console cache:clear'
+                    ]);
                 break;
                 case 'drupal':
                     coreService::process([ 
@@ -47,7 +65,7 @@ class clearCommand extends Command
             
             $output->writeln( coreService::infos('Cache clear done !') );
             
-            new notifService('Cache clear done !');
+            new notifService('Cache clear done !', 'message', true);
             
             return Command::SUCCESS;
 

@@ -49,29 +49,42 @@ class envService
 		// $dotenv->populate([ 'PASS' => $SUPERDOCK_PASS ]);
 	}
 
-	static function docker( $docker_machine_driver = 'superdock' ) {
+	static function docker( $docker_machine_driver = 'superdock', $env = 'LOCAL', $domain = 'superdock.dev' ) {
 
 		$dotenv = new Dotenv();
 
-		if ( $docker_machine_driver == 'digitalocean' ) {
+		if ( $docker_machine_driver == 'digitalocean' && $env !== 'LOCAL' && isset( $_ENV['SUPERDOCK_' . $env . '_DIGITALOCEAN_NAME'] ) ) {
 		
-			$docker_machine_id = 'docker.' . $_ENV['SUPERDOCK_PROJECT_ID'];
+			$docker_machine_id = $_ENV['SUPERDOCK_' . $env . '_DIGITALOCEAN_NAME'];
 
 			coreService::process([ 
 				'docker-machine', 
 				'create',
 				'--driver', 
 				'digitalocean', 
+				'--digitalocean-region',
+				'fra1',
 				'--digitalocean-image', 
-				$_ENV['SUPERDOCK_STAGING_DIGITALOCEAN_DOKER_IMAGE'],
+				$_ENV['SUPERDOCK_' . $env . '_DIGITALOCEAN_DOCKER_IMAGE'],
 				'--digitalocean-size',
-				$_ENV['SUPERDOCK_STAGING_DIGITALOCEAN_DOKER_SIZE'],
+				$_ENV['SUPERDOCK_' . $env . '_DIGITALOCEAN_DOCKER_SIZE'],
 				'--digitalocean-ssh-key-fingerprint',
-				$_ENV['SUPERDOCK_STAGING_DIGITALOCEAN_SSH_FINGERPRINT'],
+				$_ENV['SUPERDOCK_' . $env . '_DIGITALOCEAN_SSH_FINGERPRINT'],
 				'--digitalocean-access-token',
-				$_ENV['SUPERDOCK_STAGING_DIGITALOCEAN_TOKEN'],
+				$_ENV['SUPERDOCK_' . $env . '_DIGITALOCEAN_TOKEN'],
 				$docker_machine_id
 			]);
+
+			// --digitalocean-backups										enable backups for droplet [$DIGITALOCEAN_BACKUPS]
+			// --digitalocean-image "ubuntu-16-04-x64"								Digital Ocean Image [$DIGITALOCEAN_IMAGE]
+			// --digitalocean-ipv6											enable ipv6 for droplet [$DIGITALOCEAN_IPV6]
+			// --digitalocean-monitoring										enable monitoring for droplet [$DIGITALOCEAN_MONITORING]
+			// --digitalocean-private-networking									enable private networking for droplet [$DIGITALOCEAN_PRIVATE_NETWORKING]
+			// --digitalocean-region "nyc3"										Digital Ocean region [$DIGITALOCEAN_REGION]
+			// --digitalocean-size "s-1vcpu-1gb"									Digital Ocean size [$DIGITALOCEAN_SIZE]
+			// --digitalocean-tags 											comma-separated list of tags to apply to the Droplet [$DIGITALOCEAN_TAGS]
+			// --digitalocean-userdata
+			
 		
 		} else {
 
@@ -88,6 +101,7 @@ class envService
 			]);
 		
 		}
+
 		coreService::process([ 
 			'docker-machine', 
 			'start',

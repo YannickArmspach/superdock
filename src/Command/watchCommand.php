@@ -5,6 +5,7 @@ namespace SuperDock\Command;
 use icanhazstring\SymfonyConsoleSpinner\SpinnerProgress;
 use SuperDock\Service\coreService;
 use SuperDock\Service\envService;
+use SuperDock\Service\notifService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -40,6 +41,8 @@ class watchCommand extends Command
             
             $output->writeln( coreService::infos('watching files') );
             
+            new notifService('Superdock watching', 'message', true);
+
             return Command::SUCCESS;
 
         } else {

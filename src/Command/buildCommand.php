@@ -17,7 +17,7 @@ class buildCommand extends Command
 
     public function configure()
     {
-        $this->setDescription('Build project');
+        $this->setDescription('Build project. Execute bash script from your project (/superdock/custom/build.sh)');
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
@@ -28,15 +28,29 @@ class buildCommand extends Command
 
         if ( isset( $_ENV['SUPERDOCK_PROJECT_ID'] ) && $_ENV['SUPERDOCK_PROJECT_ID'] ) {
 
-            coreService::process([ 
-                'docker-compose', 
-                '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yaml', 
-                'exec', 
-                'webserver', 
-                'sh', 
-                '-c', 
-                'npm rebuild node-sass && npm install', 
-            ]);
+            if ( file_exists( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/custom/build.sh' ) ) {
+
+                coreService::process([ 
+                    'docker-compose', 
+                    '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
+                    'exec', 
+                    'webserver', 
+                    'sh', 
+                    '-c', 
+                    'chmod -R 777 superdock/custom/build.sh'
+                ]);
+
+                coreService::process([ 
+                    'docker-compose', 
+                    '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
+                    'exec', 
+                    'webserver', 
+                    'sh', 
+                    '-c', 
+                    'superdock/custom/build.sh'
+                ]);
+
+            }
 
             $output->writeln( coreService::infos('Project was build') );
             

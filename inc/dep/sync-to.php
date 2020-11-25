@@ -36,10 +36,13 @@ task('sync:format', function () {
 
 task('sync:db', function () {
     $SUPERDOCK = get('SUPERDOCK');
-    upload( $SUPERDOCK['SOURCE_DIR'] . '/superdock/database/local/dist.sql', '{{deploy_path}}/{{deploy_env}}.sql' );
-    run('mysql -f --host={{deploy_db_host}} --user={{deploy_db_user}} --password={{deploy_db_pass}} {{deploy_db_name}} < {{deploy_path}}/{{deploy_env}}.sql');
-    //run('mysql -u {{deploy_db_user}} -p -f -D --host={{deploy_db_host}} {{deploy_db_name}} < {{deploy_path}}/{{deploy_env}}.sql');
-    run('rm {{deploy_path}}/{{deploy_env}}.sql');
+    if ( get('deploy_db_host') == 'localhost' ) {
+        upload( $SUPERDOCK['SOURCE_DIR'] . '/superdock/database/local/dist.sql', '{{deploy_path}}/{{deploy_env}}.sql' );
+        run('mysql -f --host={{deploy_db_host}} --user={{deploy_db_user}} --password={{deploy_db_pass}} {{deploy_db_name}} < {{deploy_path}}/{{deploy_env}}.sql');
+        run('rm {{deploy_path}}/{{deploy_env}}.sql');
+    } else {
+        runLocally('mysql -f --host={{deploy_db_host}} --user={{deploy_db_user}} --password={{deploy_db_pass}} {{deploy_db_name}} < ' . $SUPERDOCK['SOURCE_DIR'] . '/superdock/database/local/dist.sql');
+    }
 });
 
 task('sync', [

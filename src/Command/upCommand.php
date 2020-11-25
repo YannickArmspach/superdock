@@ -5,6 +5,7 @@ namespace SuperDock\Command;
 use icanhazstring\SymfonyConsoleSpinner\SpinnerProgress;
 use SuperDock\Service\coreService;
 use SuperDock\Service\envService;
+use SuperDock\Service\notifService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -71,12 +72,6 @@ class upCommand extends Command
             {
                 coreService::process([ 
                     'mutagen', 
-                    'sync',
-                    'terminate',
-                    'superdock',
-                ]);
-                coreService::process([ 
-                    'mutagen', 
                     '-c' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/mutagen.yml',
                     'sync',
                     'create',
@@ -107,60 +102,41 @@ class upCommand extends Command
 
             switch ( $_ENV['SUPERDOCK_PROJECT_TYPE'] ) {
                 case 'symfony':
-                    coreService::process([ 
-                        'docker-compose', 
-                        '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
-                        'exec', 
-                        'webserver', 
-                        'sh', 
-                        '-c', 
-                        'composer install --prefer-dist --no-progress --no-ansi --no-interaction -vvv'
-                    ]);
                 break;
                 case 'drupal':
-                    coreService::process([ 
-                        'docker-compose', 
-                        '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
-                        'exec', 
-                        'webserver', 
-                        'sh', 
-                        '-c', 
-                        'composer install --prefer-dist --no-progress --no-ansi --no-interaction -vvv'
-                    ]);
-                    coreService::process([ 
-                        'docker-compose', 
-                        '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
-                        'exec', 
-                        'webserver', 
-                        'sh', 
-                        '-c', 
-                        'chown -R www-data:www-data /var/www/html/web/sites/default/files'
-                    ]);
-                    coreService::process([ 
-                        'docker-compose', 
-                        '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
-                        'exec', 
-                        'webserver', 
-                        'sh', 
-                        '-c', 
-                        'chmod -R 777 /var/www/html/web/sites/default/files'
-                    ]);
-                    coreService::process([ 
-                        'docker-compose', 
-                        '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
-                        'exec', 
-                        'webserver', 
-                        'sh', 
-                        '-c', 
-                        'php vendor/bin/drush cache:rebuild'
-                    ]);
                 break;
                 case 'wordpress':
                 break;
             }
+
+            if ( file_exists( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/custom/build.sh' ) ) {
+
+                coreService::process([ 
+                    'docker-compose', 
+                    '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
+                    'exec', 
+                    'webserver', 
+                    'sh', 
+                    '-c', 
+                    'chmod -R 777 superdock/custom/build.sh'
+                ]);
+
+                coreService::process([ 
+                    'docker-compose', 
+                    '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
+                    'exec', 
+                    'webserver', 
+                    'sh', 
+                    '-c', 
+                    'superdock/custom/build.sh'
+                ]);
+
+            }
             
             $output->writeln( coreService::infos() );
             
+            new notifService('Superdock is up', 'message', true);
+
             return Command::SUCCESS;
 
         } else {

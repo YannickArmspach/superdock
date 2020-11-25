@@ -17,7 +17,7 @@ class sshCommand extends Command
 
     public function configure()
     {
-        $this->setDescription('Start the local project')
+        $this->setDescription('ssh tunnel for environements')
              ->addArgument('env', InputArgument::OPTIONAL, 'environement', 'local' );
     }
 
@@ -25,10 +25,9 @@ class sshCommand extends Command
     {
         $output->writeln( coreService::start() );
 
-        envService::docker();
-        
         switch ( $input->getArgument('env') ) {
             case 'local':
+                envService::docker();
                 coreService::process([ 
                     'docker-compose', 
                     '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 

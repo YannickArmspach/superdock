@@ -2,24 +2,20 @@
 
 namespace SuperDock\Service;
 
-
 class notifService
 {
-
-	public function __construct( $string, $type = 'message' )
+	public function __construct( $string, $type = 'message', $refresh = false )
 	{
-		//TODO: check if mac
 		coreService::process([ 
 			'osascript', 
 			'-e',
 			'display notification "' . $string . '" with title "superdock" subtitle "' . $type . '"'
 		]);
-
-		coreService::process([ 
-			'osascript', 
-			$_ENV['SUPERDOCK_CORE_DIR'] . '/inc/scpt/chrome_refresh.scpt'
-		]);
-
+		if ( $refresh ) {
+			coreService::process([ 
+				'osascript', 
+				$_ENV['SUPERDOCK_CORE_DIR'] . '/inc/scpt/chrome_refresh.scpt'
+			]);
+		}
 	}
-
 }

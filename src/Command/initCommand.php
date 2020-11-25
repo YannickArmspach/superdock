@@ -18,7 +18,7 @@ class initCommand extends Command
 
     public function configure()
     {
-        $this->setDescription('Create new project from current directory project');
+        $this->setDescription('Create new project in current directory');
     }
 
     public function execute(InputInterface $input, OutputInterface $output)

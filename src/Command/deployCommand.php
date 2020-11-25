@@ -4,6 +4,7 @@ namespace SuperDock\Command;
 
 use SuperDock\Service\coreService;
 use SuperDock\Service\envService;
+use SuperDock\Service\notifService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -18,7 +19,7 @@ class deployCommand extends Command
 
     public function configure()
     {
-        $this->setDescription('Deploy code')
+        $this->setDescription('Deploy code on environements')
         ->addArgument('env', InputArgument::REQUIRED, 'environement')
         ->addOption('debug', null, InputOption::VALUE_NONE, 'verbose');
     }
@@ -39,6 +40,8 @@ class deployCommand extends Command
         coreService::process($cmd);
         $output->writeln( coreService::infos( 'Code was successfully deploy to the ' . $input->getArgument('env') . ' environement' ) );
     
+        new notifService('Deploy is done', 'message', true);
+
         return Command::SUCCESS;
     }
 }

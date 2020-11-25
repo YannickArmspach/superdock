@@ -22,40 +22,106 @@ class serverCommand extends Command
     public function configure()
     {
         $this->setDescription('Distant server manager')
-        ->addArgument('action', InputArgument::REQUIRED, 'init|start|stop')
-        ->addArgument('env', InputArgument::REQUIRED, 'environement');
+        ->addArgument('env', InputArgument::REQUIRED, 'environement')
+        ->addArgument('action', InputArgument::REQUIRED, 'up|down|remove');
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $output->writeln( coreService::start() );
 
-        coreService::getPassword( $input, $output );
+        // coreService::getPassword( $input, $output );
         
-        envService::docker('digitalocean');
-
         if ( isset( $_ENV['SUPERDOCK_PROJECT_ID'] ) && $_ENV['SUPERDOCK_PROJECT_ID'] ) {
 
-            coreService::process([ 
-                'docker-compose', 
-                '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.server.yml',
-                'up',
-                '-d', 
-                '--build', 
-                '--remove-orphans', 
-                '--force-recreate',
-                '--renew-anon-volumes',
-            ]);
+            $env = strtoupper( $input->getArgument('env') );
 
-            coreService::process([ 
-                'docker-compose', 
-                '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.server.yml', 
-                'exec', 
-                'webserver', 
-                'sh', 
-                '-c', 
-                'certbot --webroot -w ' . $_ENV['SUPERDOCK_LOCAL_DIR'] . '' . $_ENV['SUPERDOCK_LOCAL_DIR_PUBLIC'] . ' -d ' . $_ENV['SUPERDOCK_LOCAL_DOMAIN'] . ' --email ' . $_ENV['SUPERDOCK_DEV_EMAIL'] . ' --non-interactive --agree-tos certonly'
-            ]);
+            envService::docker('digitalocean', $env, $_ENV['SUPERDOCK_' . $env . '_DOMAIN'] );
+
+            switch( $input->getArgument('action') ) {
+
+                case 'up':
+                
+                    coreService::process([ 
+                        'docker-compose', 
+                        '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.' . $input->getArgument('env') . '.yml',
+                        'up',
+                        '-d', 
+                        '--build', 
+                        '--remove-orphans', 
+                        '--force-recreate',
+                        '--renew-anon-volumes',
+                    ]);
+
+                    //add deploy to create host dir and allow certbot check
+
+                    coreService::process([ 
+                        'docker-compose', 
+                        '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.' . $input->getArgument('env') . '.yml', 
+                        'exec', 
+                        'webserver', 
+                        'sh', 
+                        '-c', 
+                        'certbot --webroot -w ' . $_ENV['SUPERDOCK_' . $env . '_DIR'] . '/current' . $_ENV['SUPERDOCK_' . $env . '_DIR_PUBLIC'] . ' -d ' . $_ENV['SUPERDOCK_' . $env . '_DOMAIN'] . ' --email ' . $_ENV['SUPERDOCK_DEV_EMAIL'] . ' --non-interactive --keep-until-expiring --agree-tos certonly'
+                    ]);
+
+                    coreService::process([ 
+                        'docker-compose', 
+                        '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.' . $input->getArgument('env') . '.yml', 
+                        'exec', 
+                        'webserver', 
+                        'sh', 
+                        '-c', 
+                        'cp /etc/apache2/sites-available/000-default-ssl.conf /etc/apache2/sites-enabled/000-default.conf && service apache2 restart'
+                    ]);
+
+                break;
+                case 'down':
+                    //docker machine dist stop
+                break;
+                case 'remove':
+                    //docker machine dist rm
+                break;
+                case 'clear':
+
+                    coreService::process([ 
+                        'docker-compose', 
+                        '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.' . $input->getArgument('env') . '.yml', 
+                        'exec', 
+                        'webserver', 
+                        'sh', 
+                        '-c', 
+                        'cd ' . $_ENV['SUPERDOCK_' . $env . '_DIR'] . '/current && ' . 'composer install'
+                    ]);
+                    coreService::process([ 
+                        'docker-compose', 
+                        '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.' . $input->getArgument('env') . '.yml', 
+                        'exec', 
+                        'webserver', 
+                        'sh', 
+                        '-c', 
+                        'cd ' . $_ENV['SUPERDOCK_' . $env . '_DIR'] . '/current && chmod 600 public.key && chown www-data:www-data public.key && chmod 600 private.key && chown www-data:www-data private.key'
+                    ]);
+                    coreService::process([ 
+                        'docker-compose', 
+                        '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.' . $input->getArgument('env') . '.yml', 
+                        'exec', 
+                        'webserver', 
+                        'sh', 
+                        '-c', 
+                        'cd ' . $_ENV['SUPERDOCK_' . $env . '_DIR'] . '/current && chmod -R 777 web/sites/default/files && chown -R www-data:www-data web/sites/default/files'
+                    ]);
+                    coreService::process([ 
+                        'docker-compose', 
+                        '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.' . $input->getArgument('env') . '.yml', 
+                        'exec', 
+                        'webserver', 
+                        'sh', 
+                        '-c', 
+                        'cd ' . $_ENV['SUPERDOCK_' . $env . '_DIR'] . '/current && ' . 'php vendor/bin/drush cache:rebuild'
+                    ]);
+                break;
+            }
 
             $output->writeln( coreService::infos() );
             

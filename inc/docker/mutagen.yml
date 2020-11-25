@@ -30,6 +30,7 @@ sync:
         - '/web/sites/*/files/languages'
         - '/web/sites/*/files/translations'
         - '/web/sites/*/private'
+        - '/var/cache'
     permissions:
       defaultFileMode: 0644
       defaultDirectoryMode: 0755

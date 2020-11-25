@@ -18,7 +18,7 @@ class coreCommand extends Command
 
     public function configure()
     {
-        $this->setDescription('install, update, uninstall')
+        $this->setDescription('self core install/update/uninstall')
         ->addArgument('action', InputArgument::REQUIRED, 'install|update|uninstall');
     }
 
@@ -26,13 +26,13 @@ class coreCommand extends Command
     {
         switch ( $input->getArgument('action') ){
             case 'install':
-                coreService::install();
+                // coreService::install();
             break;
             case 'update':
-                coreService::update();
+                // coreService::update();
             break;
             case 'uninstall':
-                coreService::uninstall();
+                // coreService::uninstall();
             break;
         }
         return Command::SUCCESS;

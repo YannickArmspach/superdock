@@ -17,7 +17,7 @@ class dumpCommand extends Command
 
     public function configure()
     {
-        $this->setDescription('Syncronyse environements')
+        $this->setDescription('Dump database from environements')
              ->addArgument('env', InputArgument::REQUIRED, 'environement')
              ->addOption('debug', null, InputOption::VALUE_NONE, 'verbose');
     }
