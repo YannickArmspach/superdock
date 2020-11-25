@@ -19,7 +19,6 @@ curl -LO https://github.com/YannickArmspach/superdock/raw/main/dist/superdock.ph
 ## Install for contributors:
 > in developement mode, scripts will be overwrite by files locate in ~/superdock folders
 ```sh
-$ curl -LO https://github.com/YannickArmspach/superdock/raw/main/dist/superdock.phar && mv superdock.phar /usr/local/bin/superdock && chmod +x /usr/local/bin/superdock && superdock core install
 $ git clone git@github.com:YannickArmspach/superdock.git ~/superdock
 ```
 
