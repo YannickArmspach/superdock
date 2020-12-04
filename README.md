@@ -11,6 +11,9 @@ local environment for symfony, drupal and wordpress, synchronize directories and
   - [x] [Docker Machine](https://docs.docker.com/machine/install-machine/) CPU stability and better hibernation
   - [x] [Mutagen](https://mutagen.io/documentation/introduction/installation) File sync to speed up docker page load <2s
   
+> Know issue on mac bigsur update (4/12/2020)
+https://forums.virtualbox.org/viewtopic.php?f=39&t=98763&start=105#p489422
+
 ## Install for users:
 ```sh
 curl -LO https://github.com/YannickArmspach/superdock/raw/main/dist/superdock.phar && mv superdock.phar /usr/local/bin/superdock && chmod +x /usr/local/bin/superdock && superdock core install
