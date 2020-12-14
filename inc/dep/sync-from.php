@@ -82,7 +82,7 @@ task('sync:elastic:reindex', function () {
 task('sync', [
     'sync:media',
     'sync:db',
-    'sync:format',
+    // 'sync:format',
     'sync:install',
     'sync:migrate',
     'sync:elastic:reindex',

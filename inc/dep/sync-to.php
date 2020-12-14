@@ -51,7 +51,7 @@ task('sync', [
 	'deploy:lock',
 	'sync:media',
 	'sync:dump',
-	'sync:format',
+	// 'sync:format',
 	'sync:db',
 	'deploy:unlock',
 	'cleanup',
