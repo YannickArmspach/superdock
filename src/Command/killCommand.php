@@ -64,7 +64,7 @@ class killCommand extends Command
             'superdock',
         ]);
 
-        $output->writeln( '<fg=black;bg=green> RHAAAAHH </> You killed them all. Now, you can start fresh and zen ;)' );
+        $output->writeln( '<fg=black;bg=green> done </> All process killed' );
         return Command::SUCCESS;
     }
 }

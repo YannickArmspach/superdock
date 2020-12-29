@@ -5,6 +5,7 @@ require_once dirname( __DIR__ ) . '/vendor/autoload.php';
 use Symfony\Component\Console\Application; 
 use SuperDock\Command\buildCommand;
 use SuperDock\Command\clearCommand;
+use SuperDock\Command\composerCommand;
 use SuperDock\Command\coreCommand;
 use SuperDock\Command\deployCommand;
 use SuperDock\Command\downCommand;
@@ -20,7 +21,7 @@ use SuperDock\Command\killCommand;
 use SuperDock\Command\initCommand;
 use SuperDock\Command\logsCommand;
 use SuperDock\Command\serverCommand;
-// use SuperDock\Command\watchCommand;
+use SuperDock\Command\watchCommand;
 use SuperDock\Service\coreService;
 use SuperDock\Service\envService;
 
@@ -34,12 +35,13 @@ $app->add(new coreCommand());
 if ( is_file( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/.superdock' )  ) 
 {
     $app->add(new execCommand());
+    $app->add(new composerCommand());
     $app->add(new buildCommand());
     $app->add(new clearCommand());
     $app->add(new logsCommand());
     $app->add(new sshCommand());
     $app->add(new upCommand());
-    // $app->add(new watchCommand());
+    $app->add(new watchCommand());
     $app->add(new downCommand());
     $app->add(new serverCommand());
     $app->add(new deployCommand());
