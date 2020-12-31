@@ -26,7 +26,7 @@ class coreCommand extends Command
     {
         switch ( $input->getArgument('action') ){
             case 'install':
-                // coreService::install();
+                coreService::install();
             break;
             case 'update':
                 // coreService::update();
