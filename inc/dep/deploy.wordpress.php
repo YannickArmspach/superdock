@@ -164,39 +164,26 @@ task('deploy:env', function () {
 	upload( $SUPERDOCK['SOURCE_DIR'] . '/.env.{{deploy_env}}', '{{release_path}}/.env' );
 });
 
-task('deploy:chown', function () {
-    run('chown -R www-data:www-data {{deploy_path}}');
-});
-
-task('local:prepare', function () {
-	$SUPERDOCK = get('SUPERDOCK');
-	var_dump( $SUPERDOCK['SOURCE_DIR'] . $SUPERDOCK['SOURCE_UPLOAD'] );
-	// output()->write(runLocally( 'chmod 755 $(find ' . $_ENV['SUPERDOCK_PROJECT_DIR'] . ' -type d)' ));
-	// output()->write(runLocally( 'chmod 644 $(find ' . $_ENV['SUPERDOCK_PROJECT_DIR'] . ' -type f)' ));
-
-	//output()->write(runLocally( 'find ' . $_ENV['SUPERDOCK_PROJECT_DIR'] . ' -type d -print0 | xargs -0 chmod 755' ));
-	//output()->write(runLocally( 'find ' . $_ENV['SUPERDOCK_PROJECT_DIR'] . ' -type f -print0 | xargs -0 chmod 644' ));
-
-	//output()->write(runLocally( 'echo ' . $SUPERDOCK['UPLOAD'] ));
-
+task('deploy:build', function () {
+	run('cd {{release_path}} && chmod -R 777 ./superdock/custom/build.sh');
+	run('cd {{release_path}} && ./superdock/custom/build.sh');
 });
 
 //Deploy
 task('deploy', [
-	//'local:prepare',
-    'deploy:info',
-    'deploy:unlock',
-    'deploy:prepare',
-    'deploy:lock',
-    'deploy:release',
-    'deploy:code',
+	'deploy:info',
+	'deploy:unlock',
+	'deploy:prepare',
+	'deploy:lock',
+	'deploy:release',
+	'deploy:code',
 	'deploy:env',
-    'deploy:shared',
-    'deploy:writable',
-    'deploy:chown',
-    'deploy:symlink',
-    'deploy:unlock',
-    'cleanup',
+	'deploy:shared',
+	'deploy:writable',
+	'deploy:build',
+	'deploy:symlink',
+	'deploy:unlock',
+	'cleanup',
 ]);
 
 after('deploy', 'success');

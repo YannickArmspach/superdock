@@ -104,8 +104,9 @@ task('deploy:elastic:reindex', function () {
 	run('{{bin/php}} {{bin/console}} elastic:reindex -vvv {{console_options}}');
 });
 
-task('deploy:chown', function () {
-    run('chown -R www-data:www-data {{deploy_path}}');
+task('deploy:build', function () {
+	run('cd {{release_path}} && chmod -R 777 ./superdock/custom/build.sh');
+	run('cd {{release_path}} && ./superdock/custom/build.sh');
 });
 
 //Deploy
@@ -124,7 +125,7 @@ task('deploy', [
 	// 'database:migrate',
 	'deploy:cache:warmup',
     'deploy:elastic:reindex',
-    'deploy:chown',
+    'deploy:build',
     'deploy:symlink',
     'deploy:unlock',
     'cleanup',
