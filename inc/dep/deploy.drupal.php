@@ -32,6 +32,7 @@ set('rsync', function () {
 			'.git',
 			'.temp',
 			'node_modules',
+            'vendor',
 			'.env',
 			'.env.local',
 			'.env.staging',

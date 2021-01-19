@@ -49,13 +49,13 @@ class clearCommand extends Command
                     ]);
                 break;
                 case 'drupal':
-                    coreService::process([ 
-                        'docker-compose', 
-                        '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
-                        'exec', 
-                        'webserver', 
-                        'sh', 
-                        '-c', 
+                    coreService::process([
+                        'docker-compose',
+                        '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml',
+                        'exec',
+                        'webserver',
+                        'sh',
+                        '-c',
                         'php vendor/drush/drush/drush.php cache:rebuild'
                     ]);
                 break;
