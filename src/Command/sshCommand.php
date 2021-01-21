@@ -18,7 +18,7 @@ class sshCommand extends Command
     public function configure()
     {
         $this->setDescription('ssh tunnel for environements')
-             ->addArgument('env', InputArgument::OPTIONAL, 'environement', 'local' );
+            ->addArgument('env', InputArgument::OPTIONAL, 'environement', 'local' );
     }
 
     public function execute(InputInterface $input, OutputInterface $output)

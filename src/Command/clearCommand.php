@@ -58,6 +58,17 @@ class clearCommand extends Command
                         '-c', 
                         'php vendor/drush/drush/drush.php cache:rebuild'
                     ]);
+                    coreService::process([ 
+                        'docker-compose', 
+                        '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
+                        'exec', 
+                        'webserver', 
+                        'sh', 
+                        '-c', 
+                        'echo "SHOW TABLES LIKE cache%" | $(php vendor/drush/drush/drush.php sql-connect) | tail -n +2 | xargs -L1 -I% echo "TRUNCATE TABLE %;" | $(php vendor/drush/drush/drush.php sql-connect) -v'
+                    ]);
+                    
+
                 break;
                 case 'wordpress':
                 break;

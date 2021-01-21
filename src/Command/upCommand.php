@@ -86,10 +86,10 @@ class upCommand extends Command
                     $process->start();
                     $process->wait();
                     if( strpos( $process->getOutput(), 'Watching for changes' ) !== false ) {
-                        echo "✔ Mutagen connected" . PHP_EOL;
+                        echo "✔ Mutagen synchronized" . PHP_EOL;
                         return false;
                     } else{
-                       echo "➤ Waiting mutagen start..." . PHP_EOL;
+                       echo "➤ Mutagen synchronization in progress..." . PHP_EOL;
                        return true;
                     }
                 }
@@ -100,14 +100,12 @@ class upCommand extends Command
                 }
             }
 
-            switch ( $_ENV['SUPERDOCK_PROJECT_TYPE'] ) {
-                case 'symfony':
-                break;
-                case 'drupal':
-                break;
-                case 'wordpress':
-                break;
-            }
+            coreService::process([ 
+				'git', 
+				'config',
+				'core.fileMode',
+				'false'
+			]);
 
             if ( file_exists( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/custom/build.sh' ) ) {
 

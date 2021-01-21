@@ -5,7 +5,6 @@ namespace SuperDock\Command;
 use icanhazstring\SymfonyConsoleSpinner\SpinnerProgress;
 use SuperDock\Service\coreService;
 use SuperDock\Service\envService;
-use SuperDock\Service\notifService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -18,7 +17,7 @@ class watchCommand extends Command
 
     public function configure()
     {
-        $this->setDescription('Watch and rebuild prepross files');
+        $this->setDescription('Build project. Execute bash script from your project (/superdock/custom/watch.sh)');
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
@@ -29,19 +28,35 @@ class watchCommand extends Command
 
         if ( isset( $_ENV['SUPERDOCK_PROJECT_ID'] ) && $_ENV['SUPERDOCK_PROJECT_ID'] ) {
 
-            coreService::process([ 
-                'docker-compose', 
-                '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
-                'exec', 
-                'webserver', 
-                'sh', 
-                '-c', 
-                './node_modules/.bin/encore dev --watch', 
-            ]);
-            
-            $output->writeln( coreService::infos('watching files') );
-            
-            new notifService('Superdock watching', 'message', true);
+            if ( file_exists( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/custom/watch.sh' ) ) {
+
+                coreService::process([ 
+                    'docker-compose', 
+                    '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
+                    'exec', 
+                    'webserver', 
+                    'sh', 
+                    '-c', 
+                    'chmod -R 777 superdock/custom/watch.sh'
+                ]);
+
+                coreService::process([ 
+                    'docker-compose', 
+                    '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
+                    'exec', 
+                    'webserver', 
+                    'sh', 
+                    '-c', 
+                    'superdock/custom/watch.sh'
+                ]);
+
+                $output->writeln( coreService::infos('Project watching') );
+
+            } else {
+
+                $output->writeln( coreService::infos('Watch script not found at superdock/custom/watch.sh') );
+
+            }
 
             return Command::SUCCESS;
 

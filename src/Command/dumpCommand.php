@@ -18,8 +18,7 @@ class dumpCommand extends Command
     public function configure()
     {
         $this->setDescription('Dump database from environements')
-             ->addArgument('env', InputArgument::REQUIRED, 'environement')
-             ->addOption('debug', null, InputOption::VALUE_NONE, 'verbose');
+             ->addArgument('env', InputArgument::REQUIRED, 'environement');
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
@@ -34,7 +33,7 @@ class dumpCommand extends Command
             'dump',
             $input->getArgument('env')
         ];
-        if ( $input->getOption('debug') ) array_push( $cmd, '-vvv' ); 
+        if ( $input->getOption('verbose') ) array_push( $cmd, '-vvv' ); 
         coreService::process($cmd);
         $output->writeln( coreService::infos( 'The ' . $input->getArgument('env') . ' environement has been successfully saved in superdock/database/' . $input->getArgument('env') . '/dump.sql' ) );
 

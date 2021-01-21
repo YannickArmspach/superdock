@@ -154,7 +154,7 @@ class coreService
 	static function process( $command = [], $output = false  )
 	{
 		$process = new Process( 
-			$command, 
+			array_filter( $command ), 
 			null, 
 			$_ENV, 
 			null, 
@@ -175,7 +175,7 @@ class coreService
 	static function command( $command = [], $output = false  )
 	{
 		$process = new Process( 
-			$command, 
+			array_filter( $command ), 
 			null, 
 			$_ENV, 
 			null, 

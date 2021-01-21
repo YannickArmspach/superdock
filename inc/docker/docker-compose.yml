@@ -23,6 +23,7 @@ services:
       # - redis
     volumes:
       - ${SUPERDOCK_PROJECT_DIR}/superdock/certificate/${SUPERDOCK_LOCAL_DOMAIN}:/etc/ssl/certs:ro
+      - ${SUPERDOCK_PROJECT_DIR}/superdock/database:/var/www/html/superdock/database:ro
       # - ${SUPERDOCK_PROJECT_DIR}/:/var/www/html
     environment:
       MYSQL_ROOT_PASSWORD: root

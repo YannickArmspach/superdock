@@ -22,14 +22,9 @@ task('sync:media', function () {
 });
 
 task('sync:db', function () {
-    //TODO: add secure file name to dist dump before remove for security
-    if ( get('deploy_db_host') == 'localhost' ) {
     run('mysqldump --host={{deploy_db_host}} --user={{deploy_db_user}} --password={{deploy_db_pass}} {{deploy_db_name}} > {{deploy_path}}/{{deploy_env}}.sql');
     download('{{deploy_path}}/{{deploy_env}}.sql', $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/database/{{deploy_env}}/dist.sql');
     run('rm {{deploy_path}}/{{deploy_env}}.sql');
-    } else {
-        runLocally('mysqldump --host={{deploy_db_host}} --user={{deploy_db_user}} --password={{deploy_db_pass}} {{deploy_db_name}} > ' . $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/database/{{deploy_env}}/dist.sql');
-    }
 });
 
 task('sync:format', function () {
@@ -38,10 +33,7 @@ task('sync:format', function () {
     file_put_contents( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/database/' . get('deploy_env') . '/local.sql', $sql );
 });
 
-task('sync:install', function () {
-    echo "➤ Wait database sync to docker" . PHP_EOL;
-    sleep(5);
-    echo "➤ Starting database install" . PHP_EOL;
+task('sync:install', function () {    
     coreService::process([ 
         'docker-compose', 
         '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
@@ -53,38 +45,12 @@ task('sync:install', function () {
     ]);
 });
 
-desc('sync:migrate');
-task('sync:migrate', function () {
-    coreService::process([ 
-        'docker-compose', 
-        '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
-        'exec', 
-        'webserver', 
-        'sh', 
-        '-c', 
-        './bin/console --no-interaction doctrine:migration:migrate'
-    ]);
-});
-
-desc('sync:elastic:reindex');
-task('sync:elastic:reindex', function () {
-    coreService::process([ 
-        'docker-compose', 
-        '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
-        'exec', 
-        'webserver', 
-        'sh', 
-        '-c', 
-        './bin/console elastic:reindex'
-    ]);
-});
-
-task('sync', [
-    'sync:media',
-    'sync:db',
+task('sync-db', [
+	'sync:db',
     'sync:format',
     'sync:install',
-    'sync:migrate',
-    'sync:elastic:reindex',
-	'cleanup',
+]);
+
+task('sync-media', [
+	'sync:media',
 ]);

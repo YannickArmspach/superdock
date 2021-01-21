@@ -20,12 +20,12 @@ class deployCommand extends Command
     public function configure()
     {
         $this->setDescription('Deploy code on environements')
-        ->addArgument('env', InputArgument::REQUIRED, 'environement')
-        ->addOption('debug', null, InputOption::VALUE_NONE, 'verbose');
+            ->addArgument('env', InputArgument::REQUIRED, 'environement');
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
     { 
+        
         $output->writeln( coreService::start() );
         
         envService::docker();
@@ -36,7 +36,7 @@ class deployCommand extends Command
             'deploy',
             $input->getArgument('env')
         ];
-        if ( $input->getOption('debug') ) array_push( $cmd, '-vvv' ); 
+        if ( $input->getOption('verbose') ) array_push( $cmd, '-vvv' ); 
         coreService::process($cmd);
         $output->writeln( coreService::infos( 'Code was successfully deploy to the ' . $input->getArgument('env') . ' environement' ) );
     

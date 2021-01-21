@@ -50,10 +50,14 @@ class buildCommand extends Command
                     'superdock/custom/build.sh'
                 ]);
 
+                $output->writeln( coreService::infos('Project was build') );
+
+            } else {
+
+                $output->writeln( coreService::infos('Build script not found at superdock/custom/build.sh') );
+
             }
 
-            $output->writeln( coreService::infos('Project was build') );
-            
             return Command::SUCCESS;
 
         } else {

@@ -13,7 +13,6 @@ use SuperDock\Command\execCommand;
 use SuperDock\Command\infoCommand;
 use SuperDock\Command\newCommand;
 use SuperDock\Command\redmineCommand;
-use SuperDock\Command\syncCommand;
 use SuperDock\Command\dumpCommand;
 use SuperDock\Command\upCommand;
 use SuperDock\Command\sshCommand;
@@ -21,6 +20,8 @@ use SuperDock\Command\killCommand;
 use SuperDock\Command\initCommand;
 use SuperDock\Command\logsCommand;
 use SuperDock\Command\serverCommand;
+use SuperDock\Command\syncFromCommand;
+use SuperDock\Command\syncToCommand;
 use SuperDock\Command\watchCommand;
 use SuperDock\Service\coreService;
 use SuperDock\Service\envService;
@@ -45,7 +46,8 @@ if ( is_file( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/.superdock' )  )
     $app->add(new downCommand());
     $app->add(new serverCommand());
     $app->add(new deployCommand());
-    $app->add(new syncCommand());
+    $app->add(new syncFromCommand());
+    $app->add(new syncToCommand());
     $app->add(new dumpCommand());
     $app->add(new redmineCommand());
 }

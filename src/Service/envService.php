@@ -85,28 +85,48 @@ class envService
 			// --digitalocean-tags 											comma-separated list of tags to apply to the Droplet [$DIGITALOCEAN_TAGS]
 			// --digitalocean-userdata
 			
-		
+			coreService::process([ 
+				'docker-machine', 
+				'start',
+				$docker_machine_id,
+			]);
+
 		} else {
 
 			$docker_machine_id = 'superdock';
 			
-			coreService::process([ 
-				'docker-machine', 
-				'create',
-				'--driver', 
-				'virtualbox', 
-				'--virtualbox-disk-size',
-				'60000',
-				$docker_machine_id
-			]);
+			exec("docker-machine status superdock | grep Running 2>&1", $output, $return_var); 
+
+			if ( isset( $output[0] ) && $output[0] == 'Running' ) {
+			
+			} else {
+
+				coreService::process([ 
+					'docker-machine', 
+					'create',
+					'--driver', 
+					'virtualbox', 
+					'--virtualbox-disk-size',
+					'60000',
+					$docker_machine_id
+				]);
+
+				coreService::process([ 
+					'docker-machine', 
+					'start',
+					$docker_machine_id,
+				]);
+
+			}
 		
 		}
 
-		coreService::process([ 
-			'docker-machine', 
-			'start',
-			$docker_machine_id,
-		]);
+		$env = self::getDockerEnv( $docker_machine_id );
+		$dotenv->populate( $env );
+
+	}
+
+	static function getDockerEnv( $docker_machine_id = 'superdock' ) {
 
 		$env = [];
 		$env['DOCKER_TLS_VERIFY'] = 0;
@@ -141,15 +161,13 @@ class envService
 							$env['DOCKER_CERT_PATH'] = dirname( str_replace( '"', '', $config_data[1] ) );
 						break;
 						case '-H';
-						$env['DOCKER_HOST'] = $config_data[1];
+							$env['DOCKER_HOST'] = $config_data[1];
 						break;
 					}
 				}
 			}
 		}
-
-		$dotenv->populate( $env );
-
+		 return $env;
 	}
 
 }

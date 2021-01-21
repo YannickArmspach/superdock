@@ -22,8 +22,7 @@ class syncCommand extends Command
         $this->setDescription('Synchronize database and media from/to environements')
         ->addOption('from', null, InputOption::VALUE_NONE, 'sync from')
         ->addOption('to', null, InputOption::VALUE_NONE, 'sync to')
-        ->addArgument('env', InputArgument::REQUIRED, 'environement')
-        ->addOption('debug', null, InputOption::VALUE_NONE, 'verbose');
+        ->addArgument('env', InputArgument::REQUIRED, 'environement');
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
@@ -40,7 +39,7 @@ class syncCommand extends Command
                 'sync',
                 $input->getArgument('env')
             ];
-            if ( $input->getOption('debug') ) array_push( $cmd, '-vvv' ); 
+            if ( $input->getOption('verbose') ) array_push( $cmd, '-vvv' ); 
             coreService::process($cmd);
             $output->writeln( coreService::infos( 'The ' . $input->getArgument('env') . ' environement has been successfully synchronized with local' ) );
         
@@ -54,7 +53,7 @@ class syncCommand extends Command
                 'sync',
                 $input->getArgument('env')
             ];
-            if ( $input->getOption('debug') ) array_push( $cmd, '-vvv' ); 
+            if ( $input->getOption('verbose') ) array_push( $cmd, '-vvv' ); 
             coreService::process($cmd);
             $output->writeln( coreService::infos( 'The local environement has been successfully synchronized with ' . $input->getArgument('env') ) );
 

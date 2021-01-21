@@ -45,14 +45,25 @@ task('sync:db', function () {
     }
 });
 
-task('sync', [
-	'deploy:info',
-	'deploy:unlock',
-	'deploy:lock',
-	'sync:media',
+task('sync-db', [
 	'sync:dump',
 	'sync:format',
 	'sync:db',
-	'deploy:unlock',
-	'cleanup',
 ]);
+
+task('sync-media', [
+	'sync:media',
+]);
+
+
+// task('sync', [
+// 	'deploy:info',
+// 	'deploy:unlock',
+// 	'deploy:lock',
+// 	'sync:media',
+// 	'sync:dump',
+// 	'sync:format',
+// 	'sync:db',
+// 	'deploy:unlock',
+// 	'cleanup',
+// ]);
