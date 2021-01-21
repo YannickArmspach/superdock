@@ -111,13 +111,13 @@ class serverCommand extends Command
                         '-c', 
                         'cd ' . $_ENV['SUPERDOCK_' . $env . '_DIR'] . '/current && chmod -R 777 web/sites/default/files && chown -R www-data:www-data web/sites/default/files'
                     ]);
-                    coreService::process([ 
-                        'docker-compose', 
-                        '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.' . $input->getArgument('env') . '.yml', 
-                        'exec', 
-                        'webserver', 
-                        'sh', 
-                        '-c', 
+                    coreService::process([
+                        'docker-compose',
+                        '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.' . $input->getArgument('env') . '.yml',
+                        'exec',
+                        'webserver',
+                        'sh',
+                        '-c',
                         'cd ' . $_ENV['SUPERDOCK_' . $env . '_DIR'] . '/current && ' . 'php vendor/bin/drush cache:rebuild'
                     ]);
                 break;
