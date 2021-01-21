@@ -38,10 +38,10 @@ task('sync:db', function () {
     $SUPERDOCK = get('SUPERDOCK');
     if ( get('deploy_db_host') == 'localhost' ) {
         upload( $SUPERDOCK['SOURCE_DIR'] . '/superdock/database/local/dist.sql', '{{deploy_path}}/{{deploy_env}}.sql' );
-        run('mysql -f --host={{deploy_db_host}} --user={{deploy_db_user}} --password={{deploy_db_pass}} {{deploy_db_name}} < {{deploy_path}}/{{deploy_env}}.sql');
+        run('mysql -f --host={{deploy_db_host}} --user={{deploy_db_user}} --password=\'{{deploy_db_pass}}\' {{deploy_db_name}} < {{deploy_path}}/{{deploy_env}}.sql');
         run('rm {{deploy_path}}/{{deploy_env}}.sql');
     } else {
-        runLocally('mysql -f --host={{deploy_db_host}} --user={{deploy_db_user}} --password={{deploy_db_pass}} {{deploy_db_name}} < ' . $SUPERDOCK['SOURCE_DIR'] . '/superdock/database/local/dist.sql');
+        runLocally('mysql -f --host={{deploy_db_host}} --user={{deploy_db_user}} --password=\'{{deploy_db_pass}}\' {{deploy_db_name}} < ' . $SUPERDOCK['SOURCE_DIR'] . '/superdock/database/local/dist.sql');
     }
 });
 
@@ -52,7 +52,7 @@ task('sync', [
 	'sync:media',
 	'sync:dump',
 	'sync:format',
-	'sync:db',
+//	'sync:db',
 	'deploy:unlock',
 	'cleanup',
 ]);
