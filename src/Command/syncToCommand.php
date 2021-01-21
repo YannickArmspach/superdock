@@ -34,7 +34,7 @@ class syncToCommand extends Command
 
         $verbose = $input->getOption('verbose') ? '-vvv' : ''; 
 
-        $question = new ConfirmationQuestion('Replace local database with ' . $input->getArgument('env') . ' database ? (yes|no) ', false);
+        $question = new ConfirmationQuestion('Replace ' . $input->getArgument('env') . ' database with local database ? (yes|no) ', false);
         if ( ! $helper->ask($input, $output, $question) ) return Command::FAILURE;
         coreService::process([ 
             $_ENV['SUPERDOCK_CORE_DIR'] . '/vendor/deployer/deployer/bin/dep', 
@@ -44,7 +44,7 @@ class syncToCommand extends Command
             $verbose,
         ]);
 
-        $question = new ConfirmationQuestion('Replace local medias with ' . $input->getArgument('env') . ' medias ? (yes|no) ', false);
+        $question = new ConfirmationQuestion('Replace ' . $input->getArgument('env') . ' medias with local medias ? (yes|no) ', false);
         if ( ! $helper->ask($input, $output, $question) ) return Command::FAILURE;
         coreService::process([ 
             $_ENV['SUPERDOCK_CORE_DIR'] . '/vendor/deployer/deployer/bin/dep', 
