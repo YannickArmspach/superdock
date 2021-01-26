@@ -14,11 +14,11 @@ require 'settings.php';
 
 set('shared_dirs', function () {
 	$SUPERDOCK = get('SUPERDOCK');
-	return [ $SUPERDOCK['DIST_UPLOAD'], 'private' ];
+	return [ ltrim( $SUPERDOCK['DIST_UPLOAD'], '/'), 'private' ];
 });
 set('writable_dirs', function () {
 	$SUPERDOCK = get('SUPERDOCK');
-	return [ $SUPERDOCK['DIST_UPLOAD'] ];
+	return [ ltrim( $SUPERDOCK['DIST_UPLOAD'], '/') ];
 });
 
 set('rsync_src', './');
