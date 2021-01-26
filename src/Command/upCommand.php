@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace SuperDock\Command;
 
@@ -15,134 +15,144 @@ use Symfony\Component\Process\Process;
 
 class upCommand extends Command
 {
-    
-    protected static $defaultName = 'up';
 
-    public function configure()
-    {
-        $this->setDescription('Start the local project');
-    }
+  protected static $defaultName = 'up';
 
-    public function execute(InputInterface $input, OutputInterface $output)
-    {
-        $output->writeln( coreService::start() );
+  public function configure()
+  {
+    $this->setDescription('Start the local project');
+  }
 
-        coreService::getPassword( $input, $output );
+  public function execute(InputInterface $input, OutputInterface $output)
+  {
+    $output->writeln(coreService::start());
 
-        envService::docker();
-        
-        if ( isset( $_ENV['SUPERDOCK_PROJECT_ID'] ) && $_ENV['SUPERDOCK_PROJECT_ID'] ) {
+    coreService::getPassword($input, $output);
 
-            //create certs
-            if ( ! file_exists( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/certificate/' . $_ENV['SUPERDOCK_LOCAL_DOMAIN'] . '/' . $_ENV['SUPERDOCK_LOCAL_DOMAIN'] . '.pem' ) ) 
-            {
-                coreService::process([ 
-                    $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/sh/cert.sh', 
-                    $_ENV['PASS'], 
-                    $_ENV['SUPERDOCK_LOCAL_DOMAIN'], 
-                    $_ENV['SUPERDOCK_CORE_DIR'], 
-                    $_ENV['SUPERDOCK_PROJECT_ID'], 
-                    $_ENV['SUPERDOCK_PROJECT_DIR'], 
-                ]);
-            }
+    envService::docker();
 
-            //load env and create hosts
-            coreService::process([ 
-                $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/sh/env.sh', 
-                $_ENV['PASS'], 
-                $_ENV['SUPERDOCK_LOCAL_DOMAIN'], 
-                $_ENV['SUPERDOCK_CORE_DIR'], 
-                $_ENV['SUPERDOCK_PROJECT_ID'], 
-            ]);
+    if (isset($_ENV['SUPERDOCK_PROJECT_ID']) && $_ENV['SUPERDOCK_PROJECT_ID']) {
 
-            //start docker composer
-            coreService::process([ 
-                'docker-compose', 
-                '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml',
-                'up',
-                '-d', 
-                '--build', 
-                '--remove-orphans', 
-                '--force-recreate',
-                '--renew-anon-volumes',
-            ]);
+      coreService::process([
+        'git',
+        'config',
+        'core.fileMode',
+        'false'
+      ]);
 
-            //enable mutagen
-            if ( isset( $_ENV['SUPERDOCK_MUTAGEN'] ) && $_ENV['SUPERDOCK_MUTAGEN'] ) 
-            {
-                coreService::process([ 
-                    'mutagen', 
-                    '-c' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/mutagen.yml',
-                    'sync',
-                    'create',
-                    '--name',
-                    'superdock',
-                    $_ENV['SUPERDOCK_PROJECT_DIR'],
-                    'docker://root@superdock_webserver/var/www/html',
-                ]);
-                function mutagen_connect_retry( ) 
-                {
-                    $process = new Process( [ 'mutagen', 'sync', 'list' ], null, null, null, null, null );
-                    $process->start();
-                    $process->wait();
-                    if( strpos( $process->getOutput(), 'Watching for changes' ) !== false ) {
-                        echo "✔ Mutagen synchronized" . PHP_EOL;
-                        return false;
-                    } else{
-                       echo "➤ Mutagen synchronization in progress..." . PHP_EOL;
-                       return true;
-                    }
-                }
-                $active = true;
-                while($active) {
-                    $active = mutagen_connect_retry();
-                    sleep(5);
-                }
-            }
+      coreService::process([ 
+        'docker-compose', 
+        '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
+        'down', 
+        '--remove-orphans' 
+      ]);
 
-            coreService::process([ 
-				'git', 
-				'config',
-				'core.fileMode',
-				'false'
-			]);
+      if (isset($_ENV['SUPERDOCK_MUTAGEN']) && $_ENV['SUPERDOCK_MUTAGEN']) {
+        coreService::process([ 
+          'mutagen', 
+          'sync',
+          'terminate',
+          'superdock',
+        ]);
+      }
 
-            if ( file_exists( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/custom/build.sh' ) ) {
+      //create certs
+      if (!file_exists($_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/certificate/' . $_ENV['SUPERDOCK_LOCAL_DOMAIN'] . '/' . $_ENV['SUPERDOCK_LOCAL_DOMAIN'] . '.pem')) {
+        coreService::process([
+          $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/sh/cert.sh',
+          $_ENV['PASS'],
+          $_ENV['SUPERDOCK_LOCAL_DOMAIN'],
+          $_ENV['SUPERDOCK_CORE_DIR'],
+          $_ENV['SUPERDOCK_PROJECT_ID'],
+          $_ENV['SUPERDOCK_PROJECT_DIR'],
+        ]);
+      }
 
-                coreService::process([ 
-                    'docker-compose', 
-                    '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
-                    'exec', 
-                    'webserver', 
-                    'sh', 
-                    '-c', 
-                    'chmod -R 777 superdock/custom/build.sh'
-                ]);
+      //load env and create hosts
+      coreService::process([
+        $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/sh/env.sh',
+        $_ENV['PASS'],
+        $_ENV['SUPERDOCK_LOCAL_DOMAIN'],
+        $_ENV['SUPERDOCK_CORE_DIR'],
+        $_ENV['SUPERDOCK_PROJECT_ID'],
+      ]);
 
-                coreService::process([ 
-                    'docker-compose', 
-                    '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
-                    'exec', 
-                    'webserver', 
-                    'sh', 
-                    '-c', 
-                    'superdock/custom/build.sh'
-                ]);
+      //start docker composer
+      coreService::process([
+        'docker-compose',
+        '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml',
+        'up',
+        '-d',
+        '--build',
+        '--remove-orphans',
+        '--force-recreate',
+        '--renew-anon-volumes',
+      ]);
 
-            }
-            
-            $output->writeln( coreService::infos() );
-            
-            new notifService('Superdock is up', 'message', true);
-
-            return Command::SUCCESS;
-
-        } else {
-            
-            $output->writeln( '<fg=black;bg=red> ERROR </> Run <fg=cyan>up</> command fom superdock project folder' );
-            return Command::FAILURE;
-
+      //enable mutagen
+      if (isset($_ENV['SUPERDOCK_MUTAGEN']) && $_ENV['SUPERDOCK_MUTAGEN']) {
+        coreService::process([
+          'mutagen',
+          '-c' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/mutagen.yml',
+          'sync',
+          'create',
+          '--name',
+          'superdock',
+          $_ENV['SUPERDOCK_PROJECT_DIR'],
+          'docker://root@superdock_webserver/var/www/html',
+        ]);
+        function mutagen_connect_retry()
+        {
+          $process = new Process(['mutagen', 'sync', 'list'], null, null, null, null, null);
+          $process->start();
+          $process->wait();
+          if (strpos($process->getOutput(), 'Watching for changes') !== false) {
+            echo "✔ Mutagen synchronized" . PHP_EOL;
+            return false;
+          } else {
+            echo "➤ Mutagen synchronization in progress..." . PHP_EOL;
+            return true;
+          }
         }
+        $active = true;
+        while ($active) {
+          $active = mutagen_connect_retry();
+          sleep(5);
+        }
+      }
 
+      if (file_exists($_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/custom/build.sh')) {
+
+        coreService::process([
+          'docker-compose',
+          '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml',
+          'exec',
+          'webserver',
+          'sh',
+          '-c',
+          'chmod -R 777 superdock/custom/build.sh'
+        ]);
+
+        coreService::process([
+          'docker-compose',
+          '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml',
+          'exec',
+          'webserver',
+          'sh',
+          '-c',
+          'superdock/custom/build.sh'
+        ]);
+      }
+
+      $output->writeln(coreService::infos());
+
+      new notifService('Superdock is up', 'message', true);
+
+      return Command::SUCCESS;
+    } else {
+
+      $output->writeln('<fg=black;bg=red> ERROR </> Run <fg=cyan>up</> command fom superdock project folder');
+      return Command::FAILURE;
     }
+  }
 }
