@@ -46,6 +46,8 @@ class sshCommand extends Command
                         'ssh',
                         $_ENV['SUPERDOCK_STAGING_SSH_USER'] . '@' . $_ENV['SUPERDOCK_STAGING_SSH_IP'],
                         '-p' . $_ENV['SUPERDOCK_STAGING_SSH_PORT'],
+                        '-t',
+                        'cd ' . $_ENV['SUPERDOCK_STAGING_DIR'] . '; bash --login'
                     ]);
                 } else {
                     $output->writeln( '<fg=black;bg=red> ERROR </> Please configurate the <fg=cyan>.env.staging</> file' );
@@ -61,7 +63,9 @@ class sshCommand extends Command
                     coreService::process([ 
                         'ssh',
                         $_ENV['SUPERDOCK_PREPRODUCTION_SSH_USER'] . '@' . $_ENV['SUPERDOCK_PREPRODUCTION_SSH_IP'],
-                        '-p' . $_ENV['SUPERDOCK_PREPRODUCTION_SSH_PORT']
+                        '-p' . $_ENV['SUPERDOCK_PREPRODUCTION_SSH_PORT'],
+                        '-t',
+                        'cd ' . $_ENV['SUPERDOCK_PREPRODUCTION_DIR'] . '; bash --login'
                     ]);
                 } else {
                     $output->writeln( '<fg=black;bg=red> ERROR </> Please configurate the <fg=cyan>.env.preproduction</> file' );
@@ -77,7 +81,9 @@ class sshCommand extends Command
                     coreService::process([ 
                         'ssh',
                         $_ENV['SUPERDOCK_PRODUCTION_SSH_USER'] . '@' . $_ENV['SUPERDOCK_PRODUCTION_SSH_IP'],
-                        '-p' . $_ENV['SUPERDOCK_PRODUCTION_SSH_PORT']
+                        '-p' . $_ENV['SUPERDOCK_PRODUCTION_SSH_PORT'],
+                        '-t',
+                        'cd ' . $_ENV['SUPERDOCK_PRODUCTION_DIR'] . '; bash --login'
                     ]);
                 } else {
                     $output->writeln( '<fg=black;bg=red> ERROR </> Please configurate the <fg=cyan>.env.production</> file' );
