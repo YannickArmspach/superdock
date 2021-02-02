@@ -2,6 +2,8 @@
 
 namespace Deployer;
 
+ini_set( 'memory_limit', '-1' );
+
 set('ssh_type', 'native');
 set('use_relative_symlinks', false);
 set('ssh_multiplexing', true);

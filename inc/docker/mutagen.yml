@@ -5,11 +5,15 @@ sync:
     ignore:
       vcs: true
       paths:
-        - '.idea'
+        #global ignore
         - '.idea'
         - '.DS_Store'
-        - 'superdock/database'
+        #superdock ignore
+        - '/superdock/database'
+        #symfony ignore
         - '/var/*'
+        #drupal ignore
+        # - '/web/sites/default/files/*'
     permissions:
       defaultFileMode: 0644
       defaultDirectoryMode: 0755
