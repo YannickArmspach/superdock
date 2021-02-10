@@ -164,8 +164,11 @@ task('deploy:env', function () {
 });
 
 task('deploy:build', function () {
-	run('cd {{release_path}} && chmod -R 777 ./superdock/custom/build.sh');
-	run('cd {{release_path}} && ./superdock/custom/build.sh');
+	if ( file_exists( './superdock/custom/build.sh' ) || file_exists( './superdock/custom/build.' . get('deploy_env') . '.sh' ) ) {
+		$buildFilename = file_exists( './superdock/custom/build.' . get('deploy_env') . '.sh' ) ? 'build.' . get('deploy_env') . '.sh' : 'build.sh';
+		run('cd {{release_path}} && chmod -R 777 ./superdock/custom/' . $buildFilename);
+		run('cd {{release_path}} && ./superdock/custom/' . $buildFilename);
+	}
 });
 
 //Deploy

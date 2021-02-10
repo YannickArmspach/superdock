@@ -121,8 +121,10 @@ class upCommand extends Command
         }
       }
 
-      if (file_exists($_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/custom/build.sh')) {
+      if ( file_exists($_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/custom/build.sh') || file_exists($_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/custom/build.local.sh') ) {
 
+        $buildFilename = file_exists($_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/custom/build.local.sh') ? 'build.local.sh' : 'build.sh';
+        
         coreService::process([
           'docker-compose',
           '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml',
@@ -130,7 +132,7 @@ class upCommand extends Command
           'webserver',
           'sh',
           '-c',
-          'chmod -R 777 superdock/custom/build.sh'
+          'chmod -R 777 superdock/custom/' . $buildFilename
         ]);
 
         coreService::process([
@@ -140,7 +142,7 @@ class upCommand extends Command
           'webserver',
           'sh',
           '-c',
-          'superdock/custom/build.sh'
+          'superdock/custom/' . $buildFilename
         ]);
       }
 
