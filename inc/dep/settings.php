@@ -11,4 +11,4 @@ set('allow_anonymous_stats', false);
 set('writable_use_sudo', false);
 set('writable_mode', 'chmod');
 set('http_user', 'www-data');
-set('keep_releases', 20);
+set('keep_releases', 5);

@@ -31,6 +31,7 @@ set('rsync', function () {
 			$SUPERDOCK['SOURCE_UPLOAD'],
 			'.git',
 			'.temp',
+			'superdock/database/*',
 			'android',
 			'ios',
 			'browser',

@@ -34,11 +34,12 @@ class initCommand extends Command
         $SUPERDOCK_DEV_EMAIL = 'dev@' . $SUPERDOCK_PROJECT_ID . '.local';
         $SUPERDOCK_REDMINE_ID = 0;
         $SUPERDOCK_PROJECT_TYPE = 'symfony';
+        $SUPERDOCK_MUTAGEN = true;
         $SUPERDOCK_PHP = '7.3';
         $SUPERDOCK_XDEBUG = true;
         $SUPERDOCK_DATABASE = 'mysql:8';
         $SUPERDOCK_COMPOSER = true;
-        $SUPERDOCK_NODE =true;
+        $SUPERDOCK_NODE = true;
         $SUPERDOCK_V8JS = true;
         $SUPERDOCK_ELASTICSEARCH = true;
         $SUPERDOCK_REDIS = true;
@@ -72,11 +73,11 @@ class initCommand extends Command
         $output->writeln( 'You have just selected: ' . $SUPERDOCK_PROJECT_TYPE);
 
         //redmine
-        $question = new ChoiceQuestion('<fg=green>Please select redmine project (0):</>', redmineService::getProjectList(), 0 );
-        $question->setErrorMessage('Type %s is invalid.');
-        $SUPERDOCK_REDMINE_ID = $helper->ask($input, $output, $question);
-        $SUPERDOCK_REDMINE_ID = explode('id: #', $SUPERDOCK_REDMINE_ID )[1]; 
-        $output->writeln( 'You have just selected: ' . $SUPERDOCK_REDMINE_ID);
+        // $question = new ChoiceQuestion('<fg=green>Please select redmine project (0):</>', redmineService::getProjectList(), 0 );
+        // $question->setErrorMessage('Type %s is invalid.');
+        // $SUPERDOCK_REDMINE_ID = $helper->ask($input, $output, $question);
+        // $SUPERDOCK_REDMINE_ID = explode('id: #', $SUPERDOCK_REDMINE_ID )[1]; 
+        // $output->writeln( 'You have just selected: ' . $SUPERDOCK_REDMINE_ID);
 
         //SUPERDOCK_PHP
         $question = new ChoiceQuestion( '<fg=green>Please select php version (7.3):</>', ['7.1', '7.2', '7.3', '7.4'], $SUPERDOCK_PHP );
@@ -140,6 +141,7 @@ class initCommand extends Command
         } else {
             $SUPERDOCK_REDIS = 'false';
         }
+        
 
         //set values
         $ENV = [
@@ -149,6 +151,7 @@ class initCommand extends Command
                 'SUPERDOCK_DEV_EMAIL' => $SUPERDOCK_DEV_EMAIL,
                 'SUPERDOCK_PROJECT_ID' => $SUPERDOCK_PROJECT_ID,
                 'SUPERDOCK_PROJECT_TYPE' => $SUPERDOCK_PROJECT_TYPE,
+                'SUPERDOCK_MUTAGEN' => $SUPERDOCK_MUTAGEN,
                 'SUPERDOCK_REDMINE_ID' => $SUPERDOCK_REDMINE_ID,
                 'SUPERDOCK_PHP' => $SUPERDOCK_PHP,
                 'SUPERDOCK_XDEBUG' => $SUPERDOCK_XDEBUG,
@@ -161,8 +164,10 @@ class initCommand extends Command
 
             ],
             '.env.local' => [
-                'SUPERDOCK_LOCAL_DOMAIN' => $SUPERDOCK_PROJECT_ID . '.local',
-                'SUPERDOCK_LOCAL_DIR' => '/var/www/html/public',
+                'SUPERDOCK' => 'LOCAL',
+                'SUPERDOCK_LOCAL_DOMAIN' => $SUPERDOCK_PROJECT_ID . '.dev',
+                'SUPERDOCK_LOCAL_DIR' => '/var/www/html',
+                'SUPERDOCK_LOCAL_DIR_PUBLIC' => '/public',
                 'SUPERDOCK_LOCAL_UPLOAD' => '',
                 'SUPERDOCK_LOCAL_SSH_USER' => 'root',
                 'SUPERDOCK_LOCAL_SSH_IP' => 'localhost',
@@ -172,10 +177,13 @@ class initCommand extends Command
                 'SUPERDOCK_LOCAL_DB_PASS' => 'admin',
                 'SUPERDOCK_LOCAL_DB_HOST' => 'localhost',
                 'SUPERDOCK_LOCAL_BRANCH' => 'origin/develop',
+                'SUPERDOCK_DEBUG' => true
             ],
             '.env.staging' => [
+                'SUPERDOCK' => 'STAGING',
                 'SUPERDOCK_STAGING_DOMAIN' => '',
                 'SUPERDOCK_STAGING_DIR' => '',
+                'SUPERDOCK_STAGING_DIR_PUBLIC' => '',
                 'SUPERDOCK_STAGING_UPLOAD' => '',
                 'SUPERDOCK_STAGING_SSH_USER' => '',
                 'SUPERDOCK_STAGING_SSH_IP' => '',
@@ -185,10 +193,13 @@ class initCommand extends Command
                 'SUPERDOCK_STAGING_DB_PASS' => '',
                 'SUPERDOCK_STAGING_DB_HOST' => '',
                 'SUPERDOCK_STAGING_BRANCH' => '',
+                'SUPERDOCK_DEBUG' => true
             ],
             '.env.preproduction' => [
+                'SUPERDOCK' => 'PREPRODUCTION',
                 'SUPERDOCK_PREPRODUCTION_DOMAIN' => '',
                 'SUPERDOCK_PREPRODUCTION_DIR' => '',
+                'SUPERDOCK_PREPRODUCTION_DIR_PUBLIC' => '',
                 'SUPERDOCK_PREPRODUCTION_UPLOAD' => '',
                 'SUPERDOCK_PREPRODUCTION_SSH_USER' => '',
                 'SUPERDOCK_PREPRODUCTION_SSH_IP' => '',
@@ -198,10 +209,13 @@ class initCommand extends Command
                 'SUPERDOCK_PREPRODUCTION_DB_PASS' => '',
                 'SUPERDOCK_PREPRODUCTION_DB_HOST' => '',
                 'SUPERDOCK_PREPRODUCTION_BRANCH' => '',
+                'SUPERDOCK_DEBUG' => false
             ],
             '.env.production' => [
+                'SUPERDOCK' => 'PRODUCTION',
                 'SUPERDOCK_PRODUCTION_DOMAIN' => '',
                 'SUPERDOCK_PRODUCTION_DIR' => '',
+                'SUPERDOCK_PRODUCTION_DIR_PUBLIC' => '',
                 'SUPERDOCK_PRODUCTION_UPLOAD' => '',
                 'SUPERDOCK_PRODUCTION_SSH_USER' => '',
                 'SUPERDOCK_PRODUCTION_SSH_IP' => '',
@@ -211,6 +225,7 @@ class initCommand extends Command
                 'SUPERDOCK_PRODUCTION_DB_PASS' => '',
                 'SUPERDOCK_PRODUCTION_DB_HOST' => '',
                 'SUPERDOCK_PRODUCTION_BRANCH' => '',
+                'SUPERDOCK_DEBUG' => false
             ],
         ];
 

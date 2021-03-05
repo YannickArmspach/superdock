@@ -6,6 +6,7 @@ sync:
       vcs: true
       paths:
         #global ignore
+        - .temp
         - '.idea'
         - '.DS_Store'
         #superdock ignore
