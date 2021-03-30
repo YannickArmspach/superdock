@@ -6,6 +6,7 @@ use Symfony\Component\Console\Application;
 use SuperDock\Command\buildCommand;
 use SuperDock\Command\clearCommand;
 use SuperDock\Command\composerCommand;
+use SuperDock\Command\copyFromCommand;
 use SuperDock\Command\coreCommand;
 use SuperDock\Command\deployCommand;
 use SuperDock\Command\downCommand;
@@ -46,6 +47,8 @@ if ( is_file( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/.superdock' )  )
     $app->add(new downCommand());
     $app->add(new serverCommand());
     $app->add(new deployCommand());
+    $app->add(new copyFromCommand());
+    //TODO: $app->add(new copyToCommand()); 
     $app->add(new syncFromCommand());
     $app->add(new syncToCommand());
     $app->add(new dbCommand());
