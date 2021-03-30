@@ -175,7 +175,7 @@ class initCommand extends Command
                 'SUPERDOCK_LOCAL_DB_NAME' => 'db',
                 'SUPERDOCK_LOCAL_DB_USER' => 'admin',
                 'SUPERDOCK_LOCAL_DB_PASS' => 'admin',
-                'SUPERDOCK_LOCAL_DB_HOST' => 'localhost',
+                'SUPERDOCK_LOCAL_DB_HOST' => 'superdock_database',
                 'SUPERDOCK_LOCAL_BRANCH' => 'origin/develop',
                 'SUPERDOCK_DEBUG' => true
             ],
