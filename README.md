@@ -12,9 +12,7 @@ local environment for symfony, drupal and wordpress, synchronize directories and
   - [x] Docker Compose
   - [x] Virtualbox  
   - [x] [Mutagen](https://mutagen.io/documentation/introduction/installation) File sync to speed up docker page load <2s
-  
-> Know issue on mac bigsur update (4/12/2020)
-https://forums.virtualbox.org/viewtopic.php?f=39&t=98763&start=105#p489422
+
 
 ## Install for users:
 ```sh
@@ -76,21 +74,21 @@ $ superdock deploy production
 ## Sync from*
 > Sync database and media from (staging/preproduction/production) to local
 ```sh
-$ superdock sync [--from] staging
+$ superdock sync-from staging
 
-$ superdock sync [--from] preproduction
+$ superdock sync-from preproduction
 
-$ superdock sync [--from] production
+$ superdock sync-from production
 ```
 
 ## Sync to*
 > Sync database and media from local to (staging/preproduction/production)
 ```sh
-$ superdock sync --to staging
+$ superdock sync-to staging
 
-$ superdock sync --to preproduction
+$ superdock sync-to preproduction
 
-$ superdock sync --to production
+$ superdock sync-to production
 ```
 
 ##### * require access by ssh key. Send your public key to server admin of the project.
