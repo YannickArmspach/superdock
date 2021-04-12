@@ -29,7 +29,7 @@ task('sync:dump', function () {
 task('sync:format', function () {
     $SUPERDOCK = get('SUPERDOCK');
     $sql = file_get_contents( $SUPERDOCK['SOURCE_DIR'] . '/superdock/database/local/local.sql' );
-    //$sql = str_replace( $_ENV['SUPERDOCK_LOCAL_DOMAIN'], $_ENV['SUPERDOCK_' . strtoupper( get('deploy_env') ) . '_DOMAIN'], $sql );
+    $sql = str_replace( $_ENV['SUPERDOCK_LOCAL_DOMAIN'], $_ENV['SUPERDOCK_' . strtoupper( get('deploy_env') ) . '_DOMAIN'], $sql );
     $sql = str_replace( 'utf8mb4_0900_ai_ci', 'utf8mb4_unicode_ci', $sql );
     file_put_contents( $SUPERDOCK['SOURCE_DIR'] . '/superdock/database/local/dist.sql', $sql );
 });

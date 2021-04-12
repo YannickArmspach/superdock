@@ -36,8 +36,8 @@ class copyFromCommand extends Command
                     coreService::process([ 
                         'scp',
                         '-r',
-                        $_ENV['SUPERDOCK_STAGING_SSH_USER'] . '@' . $_ENV['SUPERDOCK_STAGING_SSH_IP'] . ':' . $input->getArgument('path'),
-                        $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/copy/from/staging/',
+                        $_ENV['SUPERDOCK_STAGING_SSH_USER'] . '@' . $_ENV['SUPERDOCK_STAGING_SSH_IP'] . ':' . $_ENV['SUPERDOCK_STAGING_DIR'] . '/current' . $_ENV['SUPERDOCK_STAGING_DIR_PUBLIC'] . '/' . $input->getArgument('path'),
+                        $_ENV['SUPERDOCK_PROJECT_DIR'] . $_ENV['SUPERDOCK_LOCAL_DIR_PUBLIC'] . '/' . dirname( $input->getArgument('path') ),
                     ]);
                 } else {
                     $output->writeln( '<fg=black;bg=red> ERROR </> Please configurate the <fg=cyan>.env.staging</> file' );

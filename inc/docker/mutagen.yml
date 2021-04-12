@@ -14,7 +14,9 @@ sync:
         #symfony ignore
         - '/var/*'
         #drupal ignore
-        # - '/web/sites/default/files/*'
+        - '/web/sites/default/files'
+        #wordpress ignore
+        - '/public/wp-content/uploads'
     permissions:
       defaultFileMode: 0644
       defaultDirectoryMode: 0755
