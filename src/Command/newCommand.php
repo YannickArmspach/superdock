@@ -111,7 +111,7 @@ class newCommand extends Command
                 'SUPERDOCK_LOCAL_SSH_USER' => 'root',
                 'SUPERDOCK_LOCAL_SSH_IP' => 'localhost',
                 'SUPERDOCK_LOCAL_SSH_PORT' => '22',
-                'SUPERDOCK_LOCAL_DB_NAME' => 'db',
+                'SUPERDOCK_LOCAL_DB_NAME' => $input->getArgument('id'),
                 'SUPERDOCK_LOCAL_DB_USER' => 'admin',
                 'SUPERDOCK_LOCAL_DB_PASS' => 'admin',
                 'SUPERDOCK_LOCAL_DB_HOST' => 'superdock_database',

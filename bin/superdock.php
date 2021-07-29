@@ -12,7 +12,7 @@ use SuperDock\Command\deployCommand;
 use SuperDock\Command\downCommand;
 use SuperDock\Command\execCommand;
 use SuperDock\Command\infoCommand;
-use SuperDock\Command\newCommand;
+// use SuperDock\Command\newCommand;
 use SuperDock\Command\redmineCommand;
 use SuperDock\Command\dbCommand;
 use SuperDock\Command\upCommand;
@@ -57,7 +57,7 @@ if ( is_file( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/.superdock' )  )
 
 $app->add(new infoCommand());
 $app->add(new initCommand());
-$app->add(new newCommand());
+// $app->add(new newCommand());
 $app->add(new killCommand());
 
 echo PHP_EOL;
