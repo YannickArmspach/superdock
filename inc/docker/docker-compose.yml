@@ -12,15 +12,15 @@ services:
     tty: true
     depends_on:
       - database
-      # - elasticsearch
+      - elasticsearch
     ports:
       - 80:80
       - 443:443
-      - 465:465
-      - 587:587
+      # - 465:465
+      # - 587:587
     links:
       - database
-      # - elasticsearch
+      - elasticsearch
       # - mercure
       # - redis
     volumes:
@@ -36,10 +36,10 @@ services:
       SUPERDOCK_LOCAL_DIR_PUBLIC: ${SUPERDOCK_LOCAL_DIR_PUBLIC}
       SUPERDOCK_PROJECT_BASENAME: ${SUPERDOCK_PROJECT_BASENAME}
       SUPERDOCK_LOCAL_DOMAIN: ${SUPERDOCK_LOCAL_DOMAIN}
-      SUPERDOCK_V8JS: ${SUPERDOCK_V8JS}
+      #SUPERDOCK_V8JS: ${SUPERDOCK_V8JS}
 
   database:
-    image: mysql:8
+    image: ${SUPERDOCK_DATABASE}
     container_name: superdock_database
     restart: 'always'
     stdin_open: true
@@ -105,16 +105,11 @@ services:
     ports:
       - 8080:8080
 
-  # mailcatcher:
-  #   image: schickling/mailcatcher
-  #   container_name: superdock_mailcatcher
-  #   networks:
-  #     - superdock_network
-  #   ports:
-  #     - 1080:1080
-  #   expose:
-  #     - 1025
-
+  mailhog:
+      image: mailhog/mailhog:v1.0.0
+      ports:
+        - "1025:1025"
+        - "8025:8025"
   # redis:
   #   image: redis
   #   container_name: superdock_redis

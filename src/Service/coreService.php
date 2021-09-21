@@ -102,10 +102,16 @@ class coreService
 		$output = PHP_EOL;
 		$output .= '<fg=black;bg=green> superdock </> ' . $title . PHP_EOL;
 		$output .= PHP_EOL;
-		if( isset( $_ENV['SUPERDOCK_LOCAL_DOMAIN'] ) ) $output .= '<fg=green> local</> https://' . $_ENV['SUPERDOCK_LOCAL_DOMAIN'] . PHP_EOL;
-		if( isset( $_ENV['SUPERDOCK_STAGING_DOMAIN'] ) ) $output .= '<fg=green> staging</> https://' . $_ENV['SUPERDOCK_STAGING_DOMAIN'] . PHP_EOL; 
-		if( isset( $_ENV['SUPERDOCK_PREPRODUCTION_DOMAIN'] ) ) $output .= '<fg=green> preproduction</> https://' . $_ENV['SUPERDOCK_PREPRODUCTION_DOMAIN'] . PHP_EOL; 
-		if( isset( $_ENV['SUPERDOCK_PRODUCTION_DOMAIN'] ) ) $output .= '<fg=green> production</> https://' . $_ENV['SUPERDOCK_PRODUCTION_DOMAIN'] . PHP_EOL;
+		$output .= ' Environements: ' . PHP_EOL;
+		if( isset( $_ENV['SUPERDOCK_LOCAL_DOMAIN'] ) ) $output .= ' - <fg=green>local</> https://' . $_ENV['SUPERDOCK_LOCAL_DOMAIN'] . PHP_EOL;
+		if( isset( $_ENV['SUPERDOCK_STAGING_DOMAIN'] ) ) $output .= ' - <fg=green>staging</> https://' . $_ENV['SUPERDOCK_STAGING_DOMAIN'] . PHP_EOL; 
+		if( isset( $_ENV['SUPERDOCK_PREPRODUCTION_DOMAIN'] ) ) $output .= ' - <fg=green>preproduction</> https://' . $_ENV['SUPERDOCK_PREPRODUCTION_DOMAIN'] . PHP_EOL; 
+		if( isset( $_ENV['SUPERDOCK_PRODUCTION_DOMAIN'] ) ) $output .= ' - <fg=green>production</> https://' . $_ENV['SUPERDOCK_PRODUCTION_DOMAIN'] . PHP_EOL;
+		$output .= PHP_EOL;
+		$output .= ' Tools: ' . PHP_EOL;
+		$output .= ' - <fg=green>adminer</> http://' . '192.168.99.100:8080' . PHP_EOL;
+		$output .= ' - <fg=green>mailhog</> http://' . '192.168.99.100:8025' . PHP_EOL;
+
 		return $output;
 		
 	}

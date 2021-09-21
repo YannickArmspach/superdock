@@ -76,7 +76,7 @@ class newCommand extends Command
         $output->writeln( 'You have just selected: ' . $SUPERDOCK_XDEBUG);
 
         //SUPERDOCK_DATABASE
-        $question = new ChoiceQuestion( '<fg=green>Select database engine (mysql:8):</>', ['mysql:7', 'MariaDb:8'] );
+        $question = new ChoiceQuestion( '<fg=green>Select database engine (mysql:8):</>', ['mysql:7', 'mariadb:10.2'] );
         $question->setErrorMessage('Database engine %s is invalid.');
         $SUPERDOCK_DATABASE = $helper->ask($input, $output, $question);
         $output->writeln( 'You have just selected: ' . $SUPERDOCK_DATABASE);
