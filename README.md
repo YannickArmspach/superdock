@@ -13,6 +13,9 @@ local environment for symfony, drupal and wordpress, synchronize directories and
   - [x] Virtualbox  
   - [x] [Mutagen](https://mutagen.io/documentation/introduction/installation) File sync to speed up docker page load <2s
 
+! Know issues on install
+
+Docker: since v.20.10.8: Unselect the "Use Docker Compose V2 release candidate" in docker dashboard settings
 
 ## Install for users:
 ```sh
