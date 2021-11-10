@@ -22,7 +22,7 @@ task('sync:dump', function () {
         'webserver', 
         'sh', 
         '-c', 
-        'mysqldump --host=superdock_database --user=root --password=root ' . $_ENV['SUPERDOCK_LOCAL_DB_NAME'] . ' > /var/www/html/superdock/database/local/local.sql'
+        'mysqldump --no-tablespaces --host=superdock_database --user=root --password=root ' . $_ENV['SUPERDOCK_LOCAL_DB_NAME'] . ' > /var/www/html/superdock/database/local/local.sql'
     ]);
 });
 
