@@ -35,25 +35,26 @@ class syncToCommand extends Command
         $verbose = $input->getOption('verbose') ? '-vvv' : ''; 
 
         $question = new ConfirmationQuestion('Replace ' . $input->getArgument('env') . ' database with local database ? (yes|no) ', false);
-        if ( ! $helper->ask($input, $output, $question) ) return Command::FAILURE;
-        coreService::process([ 
-            $_ENV['SUPERDOCK_CORE_DIR'] . '/vendor/deployer/deployer/bin/dep', 
-            '--file=' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/dep/sync-to.php', 
-            'sync-db',
-            $input->getArgument('env'),
-            $verbose,
-        ]);
+        if ( $helper->ask($input, $output, $question) ) {
+            coreService::process([ 
+                $_ENV['SUPERDOCK_CORE_DIR'] . '/vendor/deployer/deployer/bin/dep', 
+                '--file=' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/dep/sync-to.php', 
+                'sync-db',
+                $input->getArgument('env'),
+                $verbose,
+            ]);
+        }
 
         $question = new ConfirmationQuestion('Replace ' . $input->getArgument('env') . ' medias with local medias ? (yes|no) ', false);
-        if ( ! $helper->ask($input, $output, $question) ) return Command::FAILURE;
-        coreService::process([ 
-            $_ENV['SUPERDOCK_CORE_DIR'] . '/vendor/deployer/deployer/bin/dep', 
-            '--file=' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/dep/sync-to.php', 
-            'sync-media',
-            $input->getArgument('env'),
-            $verbose,
-        ]);
-
+        if ( $helper->ask($input, $output, $question) ) {
+            coreService::process([ 
+                $_ENV['SUPERDOCK_CORE_DIR'] . '/vendor/deployer/deployer/bin/dep', 
+                '--file=' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/dep/sync-to.php', 
+                'sync-media',
+                $input->getArgument('env'),
+                $verbose,
+            ]);
+        }
 
         $output->writeln( coreService::infos( 'The local environement has been successfully synchronized with ' . $input->getArgument('env') ) );
 
