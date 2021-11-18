@@ -167,7 +167,14 @@ class envService
 				}
 			}
 		}
-		 return $env;
+
+		$env['DOCKER_MACHINE_IP'] = trim( coreService::process([ 
+			'docker-machine', 
+			'ip',
+			$docker_machine_id,
+		], true ) );
+
+		return $env;
 	}
 
 }

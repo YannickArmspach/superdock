@@ -109,8 +109,8 @@ class coreService
 		if( isset( $_ENV['SUPERDOCK_PRODUCTION_DOMAIN'] ) ) $output .= ' - <fg=green>production</> https://' . $_ENV['SUPERDOCK_PRODUCTION_DOMAIN'] . PHP_EOL;
 		$output .= PHP_EOL;
 		$output .= ' Tools: ' . PHP_EOL;
-		$output .= ' - <fg=green>adminer</> http://' . '192.168.99.100:8080' . PHP_EOL;
-		$output .= ' - <fg=green>mailhog</> http://' . '192.168.99.100:8025' . PHP_EOL;
+		$output .= ' - <fg=green>adminer</> http://' . $_ENV['DOCKER_MACHINE_IP'] . ':8080' . PHP_EOL;
+		$output .= ' - <fg=green>mailhog</> http://' . $_ENV['DOCKER_MACHINE_IP'] . ':8025' . PHP_EOL;
 
 		return $output;
 		
@@ -167,15 +167,25 @@ class coreService
 			null, 
 			null 
 		);
-		$process->setTty(Process::isTtySupported());
-		$process->run(function ($type, $buffer) {
-			if (Process::ERR === $type) {
-				echo $buffer;
-			} else {
-				echo $buffer;
-			}
-		});
-		if ( $output ) return $process->getOutput();
+
+		if ( $output ) {
+
+			$process->run();
+			return $process->getOutput();
+		
+		} else {
+		
+			$process->setTty(Process::isTtySupported());
+			$process->run(function ($type, $buffer) {
+				if (Process::ERR === $type) {
+					echo $buffer;
+				} else {
+					echo $buffer;
+				}
+			});
+		
+		}
+		
 	}
 
 	static function command( $command = [], $output = false  )
