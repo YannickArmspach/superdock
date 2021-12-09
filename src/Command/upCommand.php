@@ -56,6 +56,8 @@ class upCommand extends Command
         ]);
       }
 
+      $output->writeln( PHP_EOL . '<fg=black;bg=green> CERTS </> generate local certificate' . PHP_EOL);
+
       //create certs
       if (!file_exists($_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/certificate/' . $_ENV['SUPERDOCK_LOCAL_DOMAIN'] . '/' . $_ENV['SUPERDOCK_LOCAL_DOMAIN'] . '.pem')) {
         coreService::process([
@@ -68,6 +70,8 @@ class upCommand extends Command
         ]);
       }
 
+      $output->writeln( PHP_EOL . '<fg=black;bg=green> ENV </> load project environements' . PHP_EOL);
+
       //load env and create hosts
       coreService::process([
         $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/sh/env.sh',
@@ -76,6 +80,8 @@ class upCommand extends Command
         $_ENV['SUPERDOCK_CORE_DIR'],
         $_ENV['SUPERDOCK_PROJECT_ID'],
       ]);
+
+      $output->writeln( PHP_EOL . '<fg=black;bg=green> DOCKER </> start docker machine' . PHP_EOL);
 
       //start docker composer
       coreService::process([
@@ -91,6 +97,9 @@ class upCommand extends Command
 
       //enable mutagen
       if (isset($_ENV['SUPERDOCK_MUTAGEN']) && $_ENV['SUPERDOCK_MUTAGEN']) {
+
+        $output->writeln( PHP_EOL . '<fg=black;bg=green> MUTAGEN </> start mutagen sync' . PHP_EOL);
+
         coreService::process([
           'mutagen',
           '-c' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/mutagen.yml',
@@ -100,12 +109,30 @@ class upCommand extends Command
           'superdock',
           $_ENV['SUPERDOCK_PROJECT_DIR'],
           'docker://root@superdock_webserver/var/www/html',
+          '--ignore',
+          $_ENV['SUPERDOCK_LOCAL_UPLOAD']
         ]);
+        global $mutagen_error;
+        $mutagen_error = false;
         function mutagen_connect_retry()
         {
+          global $mutagen_error;
+        
           $process = new Process(['mutagen', 'sync', 'list'], null, null, null, null, null);
           $process->start();
           $process->wait();
+
+          $status_error = preg_grep("/\Last error\b/i", explode( PHP_EOL, $process->getOutput() ) );
+          $error = $status_error && is_array($status_error) ? implode( ' ', $status_error ) : '';
+
+          if ( ! empty( $error ) ) {
+
+            echo "➤ Mutagen stopped... " . $error . PHP_EOL;
+            $mutagen_error = true;
+            return false;
+          
+          }
+
           if (strpos($process->getOutput(), 'Watching for changes') !== false) {
             echo "✔ Mutagen synchronized" . PHP_EOL;
             return false;
@@ -114,14 +141,24 @@ class upCommand extends Command
             return true;
           }
         }
+
         $active = true;
         while ($active) {
           $active = mutagen_connect_retry();
           sleep(5);
         }
+        
+        if ( $mutagen_error ){
+          new notifService('Superdock error', 'message', false);
+          $output->writeln( PHP_EOL . '<fg=black;bg=red> ERROR </> mutagen error' . PHP_EOL);
+          return Command::FAILURE;
+        }
+
       }
 
       if ( file_exists($_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/custom/build.sh') || file_exists($_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/custom/build.local.sh') ) {
+
+        $output->writeln( PHP_EOL . '<fg=black;bg=green> BUILD </> run build.sh' . PHP_EOL);
 
         $buildFilename = file_exists($_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/custom/build.local.sh') ? 'build.local.sh' : 'build.sh';
         

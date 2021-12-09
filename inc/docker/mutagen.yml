@@ -13,12 +13,6 @@ sync:
         - '/superdock/database'
         #symfony ignore
         - '/var/*'
-        #drupal ignore
-        - '/web/sites/default/files'
-        #wordpress ignore
-        - '/public/wp-content/uploads'
-        #symfony ignore
-        - '/public/uploads'
     permissions:
       defaultFileMode: 0644
       defaultDirectoryMode: 0755
