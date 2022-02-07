@@ -14,7 +14,8 @@ use SuperDock\Command\execCommand;
 use SuperDock\Command\infoCommand;
 // use SuperDock\Command\newCommand;
 use SuperDock\Command\redmineCommand;
-use SuperDock\Command\dbCommand;
+use SuperDock\Command\dbDumpCommand;
+use SuperDock\Command\dbInstallCommand;
 use SuperDock\Command\upCommand;
 use SuperDock\Command\sshCommand;
 use SuperDock\Command\killCommand;
@@ -51,7 +52,8 @@ if ( is_file( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/.superdock' )  )
     //TODO: $app->add(new copyToCommand()); 
     $app->add(new syncFromCommand());
     $app->add(new syncToCommand());
-    $app->add(new dbCommand());
+    $app->add(new dbDumpCommand());
+    $app->add(new dbInstallCommand());
     $app->add(new redmineCommand());
 }
 

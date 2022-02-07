@@ -38,7 +38,7 @@ task('sync:db', function () {
     $SUPERDOCK = get('SUPERDOCK');
     upload( $SUPERDOCK['SOURCE_DIR'] . '/superdock/database/local/dist.sql', '{{deploy_path}}/{{deploy_env}}.sql' );
     run('mysql -f --host={{deploy_db_host}} --user={{deploy_db_user}} --password=\'{{deploy_db_pass}}\' {{deploy_db_name}} < {{deploy_path}}/{{deploy_env}}.sql');
-    run('rm {{deploy_path}}/{{deploy_env}}.sql');
+    // run('rm {{deploy_path}}/{{deploy_env}}.sql');
 });
 
 task('sync-db', [

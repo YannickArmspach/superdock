@@ -43,7 +43,7 @@ class syncCommand extends Command
             coreService::process($cmd);
             $output->writeln( coreService::infos( 'The ' . $input->getArgument('env') . ' environement has been successfully synchronized with local' ) );
         
-            new notifService('Sync to is done', 'message', true);
+            new notifService('Sync to is done', 'message', false);
 
         } else {
             
@@ -57,7 +57,7 @@ class syncCommand extends Command
             coreService::process($cmd);
             $output->writeln( coreService::infos( 'The local environement has been successfully synchronized with ' . $input->getArgument('env') ) );
 
-            new notifService('Sync from is done', 'message', true);
+            new notifService('Sync from is done', 'message', false);
 
         }
 

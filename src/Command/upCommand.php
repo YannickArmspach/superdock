@@ -185,7 +185,7 @@ class upCommand extends Command
 
       $output->writeln(coreService::infos());
 
-      new notifService('Superdock is up', 'message', true);
+      new notifService('Superdock is up', 'message', false);
 
       return Command::SUCCESS;
     } else {

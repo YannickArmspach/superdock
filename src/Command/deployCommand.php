@@ -40,7 +40,7 @@ class deployCommand extends Command
         coreService::process($cmd);
         $output->writeln( coreService::infos( 'Code was successfully deploy to the ' . $input->getArgument('env') . ' environement' ) );
     
-        new notifService('Deploy is done', 'message', true);
+        new notifService('Deploy is done', 'message', false);
 
         return Command::SUCCESS;
     }

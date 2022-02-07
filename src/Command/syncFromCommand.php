@@ -57,7 +57,7 @@ class syncFromCommand extends Command
 
         $output->writeln( coreService::infos( 'The local environement has been successfully synchronized with ' . $input->getArgument('env') ) );
 
-        new notifService('Sync from is done', 'message', true);
+        new notifService('Sync from is done', 'message', false);
 
         return Command::SUCCESS;
     }

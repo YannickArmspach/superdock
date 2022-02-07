@@ -84,6 +84,16 @@ RUN php -r "readfile('https://getcomposer.org/installer');" | php -- --install-d
 # Xdebug
 RUN pecl install xdebug && docker-php-ext-enable xdebug
 
+# if SUPERDOCK_REDIS=false
+# Setup redis-cli
+# RUN apt-get update --fix-missing && apt-get install -y redis-tools
+# RUN pecl install -o -f redis \
+#     &&  rm -rf /tmp/pear \
+#     &&  docker-php-ext-enable redis
+
+RUN pecl install redis-5.1.1 \
+    && docker-php-ext-enable redis
+
 #add php calendar
 RUN docker-php-ext-install calendar
 

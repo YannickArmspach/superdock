@@ -110,7 +110,7 @@ class clearCommand extends Command
             
             $output->writeln( coreService::infos('Cache clear done !') );
             
-            new notifService('Cache clear done !', 'message', true);
+            new notifService('Cache clear done !', 'message', false);
             
             return Command::SUCCESS;
 
