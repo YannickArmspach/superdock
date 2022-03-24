@@ -26,8 +26,9 @@ curl -LO https://github.com/YannickArmspach/superdock/raw/main/dist/superdock.ph
 > in developement mode, scripts will be overwrite by files locate in ~/superdock folders
 ```sh
 $ git clone git@github.com:YannickArmspach/superdock.git ~/superdock
+cd ~/superdock
+composer install
 ```
-> Use ```make install``` to compile and update superdock. 
 
 > For live update add the following alias in your ~/.bash_profile or ~/.zshrc and run command with ***sdx*** instead of ***superdock***
 ```alias sdx="php ~/superdock/bin/superdock.php"```
