@@ -5,14 +5,14 @@ local environment for symfony, drupal and wordpress, synchronize directories and
 
 # Install
 
-### Installation requirements:
+### Installation requirements: (with latest tested versions) 
 
-  - [x] [Docker](https://docs.docker.com/install/) Local environement
-  - [x] [Docker Machine](https://docs.docker.com/machine/install-machine/) CPU stability and better hibernation
-  - [x] Docker Compose
-  - [x] Virtualbox  
-  - [x] [Mutagen](https://mutagen.io/documentation/introduction/installation) File sync to speed up docker page load <2s
-
+  - [x] Docker v20.10.12
+  - [x] Docker Machine v0.16.0
+  - [x] Docker Compose v1.29.2
+  - [x] Virtualbox v6.1.26
+  - [x] Mutagen v0.11.8
+  
 ! Know issues on install
 
 Docker: since v.20.10.8: Unselect the "Use Docker Compose V2 release candidate" in docker dashboard settings
