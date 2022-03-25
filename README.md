@@ -8,8 +8,8 @@ local environment for symfony, drupal and wordpress, synchronize directories and
 ### Installation requirements: (with latest tested versions) 
 
   - [x] Docker ```v20.10.12```
-  - [x] Docker ```Machine v0.16.0```
-  - [x] Docker ```Compose v1.29.2```
+  - [x] Docker Machine ```v0.16.0```
+  - [x] Docker Compose ```v1.29.2```
   - [x] Virtualbox ```v6.1.26```
   - [x] Mutagen ```v0.11.8```
   
