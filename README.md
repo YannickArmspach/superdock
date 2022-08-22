@@ -5,96 +5,103 @@ local environment for symfony, drupal and wordpress, synchronize directories and
 
 # Install
 
-### Installation requirements: (with latest tested versions) 
+## Requirements:
 
-  - [x] Docker ```v20.10.12```
-  - [x] Docker Machine ```v0.16.0```
-  - [x] Docker Compose ```v1.29.2```
-  - [x] Virtualbox ```v6.1.26```
-  - [x] Mutagen ```v0.11.8```
-  
-! Know issues on install
+Docker Desktop ```v4.11.1```
 
-Docker: since v.20.10.8: Unselect the "Use Docker Compose V2 release candidate" in docker dashboard settings
+## Steps
 
-## Install for users:
-```sh
-curl -LO https://github.com/YannickArmspach/superdock/raw/main/dist/superdock.phar && mv superdock.phar /usr/local/bin/superdock && chmod +x /usr/local/bin/superdock && superdock core install
-```
+Clone this project in ~/superdock
 
-## Install for contributors:
 ```sh
 git clone git@github.com:YannickArmspach/superdock.git ~/superdock
+```
+Go to superdock directory
+
+```sh
 cd ~/superdock
+```
+
+Install dependencies
+
+```sh
 composer install
 ```
 
-To use superdock command in contributor mode add the following alias in your ~/.bash_profile or ~/.zshrc and run command with ***sdx*** instead of ***superdock***
+Add `sd` alias to your ~/.bash_profile or ~/.zshrc
 
 ```sh
-echo 'alias sdx="php ~/superdock/bin/superdock.php"' >> ~/.zshrc
+echo 'alias sd="php ~/superdock/bin/superdock.php"' >> ~/.bash_profile
+
+-or-
+
+echo 'alias sd="php ~/superdock/bin/superdock.php"' >> ~/.zshrc
 ```
 
-# Command
-
-## New
-> Create new project
-```
-$ superdock new [id]
-```
-
-## Init
-> Create new from existing project folder
-```
-$ superdock init
-```
+# Use
 
 ## Up
-> Go in project folder and start your local environement. 
+Go in project folder and start your local environement. 
 ```
-$ superdock up
+$ sd up
 ```
 
 ## Down
-> Stop your local project
+Stop your local project
 ```
-$ superdock down
+$ sd down
 ```
 
 ## Kill
-> kill all process
+kill all process
 ```
-$ superdock kill
+$ sd kill
 ```
 
 ## Deploy*
-> Deploy your code on each environement
+Deploy your code on each environement
 ```sh
-$ superdock deploy staging
-
-$ superdock deploy preproduction
-
-$ superdock deploy production
+$ sd deploy $env
 ```
 
 ## Sync from*
-> Sync database and media from (staging/preproduction/production) to local
+Sync database and media from (staging/preproduction/production) to local
 ```sh
-$ superdock sync-from staging
-
-$ superdock sync-from preproduction
-
-$ superdock sync-from production
+$ sd sync-from $env
 ```
 
 ## Sync to*
-> Sync database and media from local to (staging/preproduction/production)
+Sync database and media from local to (staging/preproduction/production)
 ```sh
-$ superdock sync-to staging
-
-$ superdock sync-to preproduction
-
-$ superdock sync-to production
+$ sd sync-to $env
 ```
 
+## DB install**
+Install local dump in local environement
+```sh
+$ sd db-install $env/$name.sql
+```
+
+## DB dump**
+Dump database in superdock/databases/$env directory
+```sh
+$ sd db-dump $env
+```
+
+## New
+Create new project
+```
+$ sd new [id]
+```
+
+## Init
+Create new from existing project folder
+```
+$ sd init
+```
+
+
 ##### * require access by ssh key. Send your public key to server admin of the project.
+##### ** add your dump in superdock/databases directory
+
+
