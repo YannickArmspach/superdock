@@ -2,7 +2,6 @@
 
 namespace SuperDock\Command;
 
-use icanhazstring\SymfonyConsoleSpinner\SpinnerProgress;
 use SuperDock\Service\coreService;
 use SuperDock\Service\envService;
 use Symfony\Component\Console\Command\Command;
@@ -30,7 +29,8 @@ class logsCommand extends Command
         if ( isset( $_ENV['SUPERDOCK_PROJECT_ID'] ) && $_ENV['SUPERDOCK_PROJECT_ID'] ) {
 
             coreService::process([ 
-                'docker-compose', 
+                'docker',
+                'compose', 
                 '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
                 'logs',  
             ]);

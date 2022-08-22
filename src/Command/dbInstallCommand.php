@@ -30,7 +30,8 @@ class dbInstallCommand extends Command
         if ( file_exists( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/database/' . $input->getArgument('path') ) ) {
 
         coreService::process([ 
-            'docker-compose', 
+            'docker',
+            'compose', 
             '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
             'exec', 
             'webserver', 

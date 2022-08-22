@@ -2,7 +2,6 @@
 
 namespace SuperDock\Command;
 
-use icanhazstring\SymfonyConsoleSpinner\SpinnerProgress;
 use SuperDock\Service\coreService;
 use SuperDock\Service\envService;
 use Symfony\Component\Console\Command\Command;
@@ -31,7 +30,8 @@ class watchCommand extends Command
             if ( file_exists( $_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/custom/watch.sh' ) ) {
 
                 coreService::process([ 
-                    'docker-compose', 
+                    'docker',
+                    'compose', 
                     '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
                     'exec', 
                     'webserver', 
@@ -41,7 +41,8 @@ class watchCommand extends Command
                 ]);
 
                 coreService::process([ 
-                    'docker-compose', 
+                    'docker',
+                    'compose', 
                     '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
                     'exec', 
                     'webserver', 

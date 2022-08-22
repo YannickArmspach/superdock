@@ -13,7 +13,7 @@ unset SUPERDOCK_PROJECT_ID
 SUPERDOCK_PROJECT_ID="$4"
 
 unset SUPERDOCK_DOCKER_IP
-SUPERDOCK_DOCKER_IP=$(docker-machine ip superdock)
+SUPERDOCK_DOCKER_IP=0.0.0.0
 
 echo $PASS | sudo -S sed -i '' "/#superdock/d" /etc/hosts
 echo $PASS | sudo -- sh -c -e "echo '$SUPERDOCK_DOCKER_IP $SUPERDOCK_LOCAL_DOMAIN #superdock' >> /etc/hosts"

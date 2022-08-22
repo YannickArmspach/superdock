@@ -16,7 +16,8 @@ task('sync:media', function () {
 task('sync:dump', function () {
     $SUPERDOCK = get('SUPERDOCK');
     coreService::process([ 
-        'docker-compose', 
+        'docker',
+        'compose', 
         '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
         'exec', 
         'webserver', 

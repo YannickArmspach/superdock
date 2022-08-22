@@ -2,7 +2,6 @@
 
 namespace SuperDock\Command;
 
-use icanhazstring\SymfonyConsoleSpinner\SpinnerProgress;
 use SuperDock\Service\coreService;
 use SuperDock\Service\envService;
 use SuperDock\Service\notifService;
@@ -41,7 +40,8 @@ class upCommand extends Command
       ]);
 
       coreService::process([ 
-        'docker-compose', 
+        'docker',
+        'compose', 
         '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
         'down', 
         '--remove-orphans' 
@@ -81,11 +81,12 @@ class upCommand extends Command
         $_ENV['SUPERDOCK_PROJECT_ID'],
       ]);
 
-      $output->writeln( PHP_EOL . '<fg=black;bg=green> DOCKER </> start docker machine' . PHP_EOL);
+      $output->writeln( PHP_EOL . '<fg=black;bg=green> DOCKER </> start docker' . PHP_EOL);
 
       //start docker composer
       coreService::process([
-        'docker-compose',
+        'docker',
+        'compose',
         '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml',
         'up',
         '-d',
@@ -96,6 +97,7 @@ class upCommand extends Command
       ]);
 
       //enable mutagen
+      /*
       if (isset($_ENV['SUPERDOCK_MUTAGEN']) && $_ENV['SUPERDOCK_MUTAGEN']) {
 
         $output->writeln( PHP_EOL . '<fg=black;bg=green> MUTAGEN </> start mutagen sync' . PHP_EOL);
@@ -155,6 +157,7 @@ class upCommand extends Command
         }
 
       }
+      */
 
       if ( file_exists($_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/custom/build.sh') || file_exists($_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/custom/build.local.sh') ) {
 
@@ -163,7 +166,8 @@ class upCommand extends Command
         $buildFilename = file_exists($_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/custom/build.local.sh') ? 'build.local.sh' : 'build.sh';
         
         coreService::process([
-          'docker-compose',
+          'docker',
+          'compose',
           '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml',
           'exec',
           'webserver',
@@ -173,7 +177,8 @@ class upCommand extends Command
         ]);
 
         coreService::process([
-          'docker-compose',
+          'docker',
+          'compose',
           '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml',
           'exec',
           'webserver',

@@ -2,7 +2,6 @@
 
 namespace SuperDock\Command;
 
-use icanhazstring\SymfonyConsoleSpinner\SpinnerProgress;
 use SuperDock\Service\coreService;
 use SuperDock\Service\envService;
 use Symfony\Component\Console\Command\Command;
@@ -43,7 +42,8 @@ class serverCommand extends Command
                 case 'up':
                 
                     coreService::process([ 
-                        'docker-compose', 
+                        'docker',
+                        'compose', 
                         '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.' . $input->getArgument('env') . '.yml',
                         'up',
                         '-d', 
@@ -56,7 +56,8 @@ class serverCommand extends Command
                     //add deploy to create host dir and allow certbot check
 
                     coreService::process([ 
-                        'docker-compose', 
+                        'docker',
+                        'compose', 
                         '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.' . $input->getArgument('env') . '.yml', 
                         'exec', 
                         'webserver', 
@@ -66,7 +67,8 @@ class serverCommand extends Command
                     ]);
 
                     coreService::process([ 
-                        'docker-compose', 
+                        'docker',
+                        'compose', 
                         '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.' . $input->getArgument('env') . '.yml', 
                         'exec', 
                         'webserver', 
@@ -77,15 +79,16 @@ class serverCommand extends Command
 
                 break;
                 case 'down':
-                    //docker machine dist stop
+                    
                 break;
                 case 'remove':
-                    //docker machine dist rm
+                   
                 break;
                 case 'clear':
 
                     coreService::process([ 
-                        'docker-compose', 
+                        'docker',
+                        'compose', 
                         '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.' . $input->getArgument('env') . '.yml', 
                         'exec', 
                         'webserver', 
@@ -94,7 +97,8 @@ class serverCommand extends Command
                         'cd ' . $_ENV['SUPERDOCK_' . $env . '_DIR'] . '/current && ' . 'composer install'
                     ]);
                     coreService::process([ 
-                        'docker-compose', 
+                        'docker',
+                        'compose', 
                         '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.' . $input->getArgument('env') . '.yml', 
                         'exec', 
                         'webserver', 
@@ -103,7 +107,8 @@ class serverCommand extends Command
                         'cd ' . $_ENV['SUPERDOCK_' . $env . '_DIR'] . '/current && chmod 600 public.key && chown www-data:www-data public.key && chmod 600 private.key && chown www-data:www-data private.key'
                     ]);
                     coreService::process([ 
-                        'docker-compose', 
+                        'docker',
+                        'compose', 
                         '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.' . $input->getArgument('env') . '.yml', 
                         'exec', 
                         'webserver', 
@@ -112,7 +117,8 @@ class serverCommand extends Command
                         'cd ' . $_ENV['SUPERDOCK_' . $env . '_DIR'] . '/current && chmod -R 777 web/sites/default/files && chown -R www-data:www-data web/sites/default/files'
                     ]);
                     coreService::process([
-                        'docker-compose',
+                        'docker',
+                        'compose',
                         '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.' . $input->getArgument('env') . '.yml',
                         'exec',
                         'webserver',

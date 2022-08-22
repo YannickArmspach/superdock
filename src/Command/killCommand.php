@@ -2,7 +2,6 @@
 
 namespace SuperDock\Command;
 
-use icanhazstring\SymfonyConsoleSpinner\SpinnerProgress;
 use SuperDock\Service\coreService;
 use SuperDock\Service\envService;
 use Symfony\Component\Console\Command\Command;
@@ -29,7 +28,8 @@ class killCommand extends Command
         envService::docker();
 
         coreService::process([ 
-            'docker-compose', 
+            'docker',
+            'compose', 
             '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
             'down', 
             '--remove-orphans' 
@@ -52,17 +52,17 @@ class killCommand extends Command
             $_ENV['PASS'], 
         ]);
             
-        coreService::process([ 
-            'mutagen', 
-            'daemon',
-            'stop',
-        ]);
+        // coreService::process([ 
+        //     'mutagen', 
+        //     'daemon',
+        //     'stop',
+        // ]);
 
-        coreService::process([ 
-            'docker-machine', 
-            'stop',
-            'superdock',
-        ]);
+        // coreService::process([ 
+        //     'docker-machine', 
+        //     'stop',
+        //     'superdock',
+        // ]);
 
         $output->writeln( '<fg=black;bg=green> done </> All process killed' );
         return Command::SUCCESS;

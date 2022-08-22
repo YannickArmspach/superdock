@@ -45,40 +45,28 @@ class copyFromCommand extends Command
                 }
             break;
             case 'preproduction':
-                if ( 
-                    isset( $_ENV['SUPERDOCK_PREPRODUCTION_SSH_USER'] ) && $_ENV['SUPERDOCK_PREPRODUCTION_SSH_USER'] && 
-                    isset( $_ENV['SUPERDOCK_PREPRODUCTION_SSH_IP'] ) && $_ENV['SUPERDOCK_PREPRODUCTION_SSH_IP'] && 
-                    isset( $_ENV['SUPERDOCK_PREPRODUCTION_SSH_PORT'] ) && $_ENV['SUPERDOCK_PREPRODUCTION_SSH_PORT']
-                ) {
-                    coreService::process([ 
-                        'ssh',
-                        $_ENV['SUPERDOCK_PREPRODUCTION_SSH_USER'] . '@' . $_ENV['SUPERDOCK_PREPRODUCTION_SSH_IP'],
-                        '-p' . $_ENV['SUPERDOCK_PREPRODUCTION_SSH_PORT'],
-                        '-t',
-                        'cd ' . $_ENV['SUPERDOCK_PREPRODUCTION_DIR'] . '; bash --login'
-                    ]);
-                } else {
-                    $output->writeln( '<fg=black;bg=red> ERROR </> Please configurate the <fg=cyan>.env.preproduction</> file' );
-                    return Command::FAILURE;
-                }
+                
             break;
             case 'production':
-                if ( 
-                    isset( $_ENV['SUPERDOCK_PRODUCTION_SSH_USER'] ) && $_ENV['SUPERDOCK_PRODUCTION_SSH_USER'] && 
-                    isset( $_ENV['SUPERDOCK_PRODUCTION_SSH_IP'] ) && $_ENV['SUPERDOCK_PRODUCTION_SSH_IP'] && 
-                    isset( $_ENV['SUPERDOCK_PRODUCTION_SSH_PORT'] ) && $_ENV['SUPERDOCK_PRODUCTION_SSH_PORT']
-                ) {
-                    coreService::process([ 
-                        'ssh',
-                        $_ENV['SUPERDOCK_PRODUCTION_SSH_USER'] . '@' . $_ENV['SUPERDOCK_PRODUCTION_SSH_IP'],
-                        '-p' . $_ENV['SUPERDOCK_PRODUCTION_SSH_PORT'],
-                        '-t',
-                        'cd ' . $_ENV['SUPERDOCK_PRODUCTION_DIR'] . '; bash --login'
-                    ]);
-                } else {
-                    $output->writeln( '<fg=black;bg=red> ERROR </> Please configurate the <fg=cyan>.env.production</> file' );
-                    return Command::FAILURE;
-                }
+              if ( 
+                isset( $_ENV['SUPERDOCK_PRODUCTION_SSH_USER'] ) && $_ENV['SUPERDOCK_PRODUCTION_SSH_USER'] && 
+                isset( $_ENV['SUPERDOCK_PRODUCTION_SSH_IP'] ) && $_ENV['SUPERDOCK_PRODUCTION_SSH_IP'] && 
+                isset( $_ENV['SUPERDOCK_PRODUCTION_SSH_PORT'] ) && $_ENV['SUPERDOCK_PRODUCTION_SSH_PORT']
+              ) {
+                  coreService::process([ 
+                      'scp',
+                      '-r',
+                      $_ENV['SUPERDOCK_PRODUCTION_SSH_USER'] . '@' . $_ENV['SUPERDOCK_PRODUCTION_SSH_IP'] . ':' . $_ENV['SUPERDOCK_PRODUCTION_DIR'] . '/current' . $_ENV['SUPERDOCK_PRODUCTION_DIR_PUBLIC'] . '/' . $input->getArgument('path'),
+                      $_ENV['SUPERDOCK_PROJECT_DIR'] . $_ENV['SUPERDOCK_PRODUCTION_DIR_PUBLIC'] . '/' . dirname( $input->getArgument('path') ),
+                  ]);
+              } else {
+                  $output->writeln( '<fg=black;bg=red> ERROR </> Please configurate the <fg=cyan>.env.production</> file' );
+                  return Command::FAILURE;
+              }
+            break;
+            default:
+              $output->writeln( '<fg=black;bg=red> ERROR </> "' . $input->getArgument('env') . '" environement name doesn\'t exist file' );
+              return Command::FAILURE;
             break;
         }
         return Command::SUCCESS;

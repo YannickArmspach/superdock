@@ -30,7 +30,8 @@ class dumpCommand extends Command
         if ( $input->getArgument('env') == 'local' ) {
             
             coreService::process([ 
-                'docker-compose', 
+                'docker',
+                'compose', 
                 '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
                 'exec', 
                 'webserver', 

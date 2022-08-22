@@ -32,7 +32,8 @@ class clearCommand extends Command
                 $clearFilename = file_exists($_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/custom/clear.local.sh') ? 'clear.local.sh' : 'clear.sh';
 
                 coreService::process([ 
-                    'docker-compose', 
+                    'docker',
+                    'compose', 
                     '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
                     'exec', 
                     'webserver', 
@@ -42,7 +43,8 @@ class clearCommand extends Command
                 ]);
 
                 coreService::process([ 
-                    'docker-compose', 
+                    'docker',
+                    'compose', 
                     '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
                     'exec', 
                     'webserver', 
@@ -58,7 +60,8 @@ class clearCommand extends Command
                 switch ( $_ENV['SUPERDOCK_PROJECT_TYPE'] ) {
                     case 'symfony':
                         coreService::process([ 
-                            'docker-compose', 
+                            'docker',
+                            'compose', 
                             '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
                             'exec', 
                             'webserver', 
@@ -67,7 +70,8 @@ class clearCommand extends Command
                             'chmod -R 777 var'
                         ]);
                         coreService::process([ 
-                            'docker-compose', 
+                            'docker',
+                            'compose', 
                             '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
                             'exec', 
                             'webserver', 
@@ -81,7 +85,8 @@ class clearCommand extends Command
                     break;
                     case 'drupal':
                         coreService::process([
-                            'docker-compose',
+                            'docker',
+                            'compose',
                             '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml',
                             'exec',
                             'webserver',
@@ -90,7 +95,8 @@ class clearCommand extends Command
                             'php vendor/drush/drush/drush.php cache:rebuild'
                         ]);
                         coreService::process([ 
-                            'docker-compose', 
+                            'docker',
+                            'compose', 
                             '-f' . $_ENV['SUPERDOCK_CORE_DIR'] . '/inc/docker/docker-compose.yml', 
                             'exec', 
                             'webserver', 

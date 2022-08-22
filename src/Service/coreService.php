@@ -109,8 +109,8 @@ class coreService
 		if( isset( $_ENV['SUPERDOCK_PRODUCTION_DOMAIN'] ) ) $output .= ' - <fg=green>production</> https://' . $_ENV['SUPERDOCK_PRODUCTION_DOMAIN'] . PHP_EOL;
 		$output .= PHP_EOL;
 		$output .= ' Tools: ' . PHP_EOL;
-		$output .= ' - <fg=green>adminer</> http://' . $_ENV['DOCKER_MACHINE_IP'] . ':8080' . PHP_EOL;
-		$output .= ' - <fg=green>mailhog</> http://' . $_ENV['DOCKER_MACHINE_IP'] . ':8025' . PHP_EOL;
+		$output .= ' - <fg=green>adminer</> http://0.0.0.0:8080' . PHP_EOL;
+		$output .= ' - <fg=green>mailhog</> http://0.0.0.0:8025' . PHP_EOL;
 
 		return $output;
 		

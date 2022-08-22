@@ -50,7 +50,7 @@ class envService
 	}
 
 	static function docker( $docker_machine_driver = 'superdock', $env = 'LOCAL', $domain = 'superdock.dev' ) {
-
+    /*
 		$dotenv = new Dotenv();
 
 		if ( $docker_machine_driver == 'digitalocean' && $env !== 'LOCAL' && isset( $_ENV['SUPERDOCK_' . $env . '_DIGITALOCEAN_NAME'] ) ) {
@@ -123,7 +123,7 @@ class envService
 
 		$env = self::getDockerEnv( $docker_machine_id );
 		$dotenv->populate( $env );
-
+    */
 	}
 
 	static function getDockerEnv( $docker_machine_id = 'superdock' ) {
