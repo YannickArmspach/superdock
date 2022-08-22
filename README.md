@@ -9,6 +9,11 @@ local environment for symfony, drupal and wordpress, synchronize directories and
 
 Docker Desktop ```v4.11.1```
 
+Experimental Features
+- [x] Use Docker Compose V2
+- [x] Use the new Virtualization framework
+- [x] Enable VirtioFS accelerated directory sharing
+
 ## Steps
 
 Clone this project in ~/superdock
