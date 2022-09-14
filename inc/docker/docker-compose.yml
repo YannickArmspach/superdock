@@ -28,7 +28,7 @@ services:
       - ${SUPERDOCK_PROJECT_DIR}/superdock/certificate/${SUPERDOCK_LOCAL_DOMAIN}:/etc/ssl/certs:ro
       - ${SUPERDOCK_PROJECT_DIR}/superdock/database:/var/www/html/superdock/database
       - ${SUPERDOCK_PROJECT_DIR}${SUPERDOCK_LOCAL_UPLOAD}:/var/www/html${SUPERDOCK_LOCAL_UPLOAD}
-      - ${SUPERDOCK_PROJECT_DIR}:/var/www/html
+      # - ${SUPERDOCK_PROJECT_DIR}:/var/www/html
     command: --default-authentication-plugin=mysql_native_password
     environment:
       MYSQL_ROOT_PASSWORD: root

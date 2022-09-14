@@ -52,11 +52,11 @@ class killCommand extends Command
             $_ENV['PASS'], 
         ]);
             
-        // coreService::process([ 
-        //     'mutagen', 
-        //     'daemon',
-        //     'stop',
-        // ]);
+        coreService::process([ 
+            'mutagen', 
+            'daemon',
+            'stop',
+        ]);
 
         // coreService::process([ 
         //     'docker-machine', 

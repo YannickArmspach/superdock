@@ -97,7 +97,7 @@ class upCommand extends Command
       ]);
 
       //enable mutagen
-      /*
+      
       if (isset($_ENV['SUPERDOCK_MUTAGEN']) && $_ENV['SUPERDOCK_MUTAGEN']) {
 
         $output->writeln( PHP_EOL . '<fg=black;bg=green> MUTAGEN </> start mutagen sync' . PHP_EOL);
@@ -157,7 +157,7 @@ class upCommand extends Command
         }
 
       }
-      */
+     
 
       if ( file_exists($_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/custom/build.sh') || file_exists($_ENV['SUPERDOCK_PROJECT_DIR'] . '/superdock/custom/build.local.sh') ) {
 
