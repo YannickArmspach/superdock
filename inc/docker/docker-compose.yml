@@ -5,7 +5,7 @@ services:
   webserver:
     build:
       context: ./../
-      dockerfile: ./docker/Dockerfile.local
+      dockerfile: ./docker/Dockerfile.php-${SUPERDOCK_PHP}.local
     container_name: superdock_webserver
     restart: 'always'
     stdin_open: true

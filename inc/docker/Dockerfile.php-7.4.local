@@ -1,0 +1,148 @@
+FROM php:7.4.22-apache
+# FROM ubuntu:20.04
+
+RUN apt-get autoclean
+
+RUN apt-get update --fix-missing
+
+RUN apt-get install -y \
+    locales \
+    wget \
+    git \
+    zip \
+    webp \
+    unzip \
+    libicu-dev \
+    libcurl4 \
+    libcurl4-gnutls-dev \
+    mariadb-client \
+    libpng-dev \
+    libwebp-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    libjpeg62-turbo-dev \
+    libmcrypt-dev \
+    libsodium-dev \
+    zlib1g-dev \
+    libzip-dev
+
+RUN echo "Europe/Paris" >/etc/timezone && \
+    ln -sf /usr/share/zoneinfo/Europe/Paris /etc/localtime && \
+    dpkg-reconfigure -f noninteractive tzdata && \
+    sed -i -e 's/# fr_FR.UTF-8 UTF-8/fr_FR.UTF-8 UTF-8/' /etc/locale.gen && \
+    echo 'LANG="fr_FR.UTF-8"'>/etc/default/locale && \
+    dpkg-reconfigure -f noninteractive locales && \
+    update-locale LANG=fr_FR.UTF-8
+
+RUN docker-php-ext-configure intl
+RUN docker-php-ext-install intl
+
+RUN docker-php-ext-install iconv
+RUN docker-php-ext-install mysqli
+RUN docker-php-ext-install pdo
+RUN docker-php-ext-install pdo_mysql
+RUN docker-php-ext-install curl
+RUN docker-php-ext-install tokenizer
+RUN docker-php-ext-install json
+RUN docker-php-ext-install gettext
+RUN docker-php-ext-install exif
+RUN docker-php-ext-install pcntl
+RUN docker-php-ext-install zip
+RUN docker-php-ext-install sodium
+RUN docker-php-ext-enable pdo_mysql
+
+
+
+# Imagemagick
+RUN apt-get update && apt-get install -y libmagickwand-6.q16-dev --no-install-recommends \
+    && ln -s /usr/lib/x86_64-linux-gnu/ImageMagick-6.8.9/bin-Q16/MagickWand-config /usr/bin \
+    && pecl install imagick \
+    && echo "extension=imagick.so" > /usr/local/etc/php/conf.d/ext-imagick.ini
+
+# config gd
+RUN docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg --with-webp
+RUN docker-php-ext-install gd
+
+# if SUPERDOCK_NODE=true
+#Install node
+RUN curl -sL https://deb.nodesource.com/setup_12.x | bash
+RUN apt-get install -y nodejs
+RUN curl -sL https://npmjs.org/install.sh | sh
+
+# if SUPERDOCK_YARN=true
+#Install yarn
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+RUN apt-get update && apt-get install -y yarn
+
+# if SUPERDOCK_COMPOSER=true
+# Get composer
+RUN php -r "readfile('https://getcomposer.org/installer');" | php -- --install-dir=/usr/local/bin --filename=composer \
+    && chmod +x /usr/local/bin/composer
+    
+# if SUPERDOCK_XDEBUG=true
+# Xdebug
+RUN pecl install xdebug && docker-php-ext-enable xdebug
+
+# if SUPERDOCK_REDIS=false
+# Setup redis-cli
+# RUN apt-get update --fix-missing && apt-get install -y redis-tools
+# RUN pecl install -o -f redis \
+#     &&  rm -rf /tmp/pear \
+#     &&  docker-php-ext-enable redis
+
+RUN pecl install redis-5.1.1 \
+    && docker-php-ext-enable redis
+
+#add php calendar
+RUN docker-php-ext-install calendar
+
+# Apache settings
+RUN a2enmod rewrite \
+    && a2enmod proxy \
+    && a2enmod headers \
+    && a2enmod proxy_http \
+    && a2enmod ssl
+
+#install certbot, sendmail and ssmtp for ssl and mails
+RUN apt-get install software-properties-common -y && \
+    apt-get update --fix-missing && \
+    apt-add-repository -r ppa:certbot/certbot -y && \
+    apt-get update --fix-missing
+    # apt-get install python-certbot-apache -y
+
+
+# PHP sessions
+RUN mkdir -p /var/lib/php/sessions && chown -R www-data /var/lib/php && chmod -R 775 /var/lib/php/sessions
+
+# Copy required configuration files
+COPY conf/local.conf /etc/apache2/sites-available/000-default.conf
+COPY php/php.ini /usr/local/etc/php/conf.d/app.ini
+COPY php/php.ini /usr/local/etc/php/php.ini
+
+#curl cert
+COPY curl/cacert.pem /usr/local/etc/curl/cacert.pem
+
+#mailhog
+RUN apt-get update &&\
+    apt-get install --no-install-recommends --assume-yes --quiet ca-certificates curl git &&\
+    rm -rf /var/lib/apt/lists/*
+RUN curl -Lsf 'https://storage.googleapis.com/golang/go1.8.3.linux-amd64.tar.gz' | tar -C '/usr/local' -xvzf -
+ENV PATH /usr/local/go/bin:$PATH
+RUN go get github.com/mailhog/mhsendmail
+RUN cp /root/go/bin/mhsendmail /usr/bin/mhsendmail
+RUN echo 'sendmail_path = /usr/bin/mhsendmail --smtp-addr mailhog:1025' > /usr/local/etc/php/php.ini
+
+RUN docker-php-ext-install opcache
+COPY php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
+
+# Locale
+ENV LC_ALL="fr_FR.UTF-8"
+ENV LANG="fr_FR.UTF-8"
+ENV LANGUAGE="fr_FR.UTF-8"
+
+# tips: get volumes access
+RUN usermod -u 1000 www-data
+RUN usermod -G staff www-data
+
+CMD ["apache2-foreground"]
