@@ -12,7 +12,7 @@ services:
     tty: true
     depends_on:
       - database
-      - redis
+      # - redis
       # - elasticsearch
     ports:
       - 80:80
@@ -21,7 +21,7 @@ services:
       # - 587:587
     links:
       - database
-      - redis
+      # - redis
       # - elasticsearch
       # - mercure
     volumes:
