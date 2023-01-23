@@ -82,7 +82,7 @@ RUN php -r "readfile('https://getcomposer.org/installer');" | php -- --install-d
     
 # if SUPERDOCK_XDEBUG=true
 # Xdebug
-RUN pecl install xdebug && docker-php-ext-enable xdebug
+# RUN pecl install xdebug && docker-php-ext-enable xdebug
 
 # if SUPERDOCK_REDIS=false
 # Setup redis-cli
