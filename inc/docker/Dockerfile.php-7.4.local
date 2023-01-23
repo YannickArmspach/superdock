@@ -65,7 +65,7 @@ RUN docker-php-ext-install gd
 
 # if SUPERDOCK_NODE=true
 #Install node
-RUN curl -sL https://deb.nodesource.com/setup_12.x | bash
+RUN curl -sL https://deb.nodesource.com/setup_16.x | bash
 RUN apt-get install -y nodejs
 RUN curl -sL https://npmjs.org/install.sh | sh
 
@@ -124,14 +124,16 @@ COPY php/php.ini /usr/local/etc/php/php.ini
 COPY curl/cacert.pem /usr/local/etc/curl/cacert.pem
 
 #mailhog
-RUN apt-get update &&\
-    apt-get install --no-install-recommends --assume-yes --quiet ca-certificates curl git &&\
-    rm -rf /var/lib/apt/lists/*
-RUN curl -Lsf 'https://storage.googleapis.com/golang/go1.8.3.linux-amd64.tar.gz' | tar -C '/usr/local' -xvzf -
-ENV PATH /usr/local/go/bin:$PATH
-RUN go get github.com/mailhog/mhsendmail
-RUN cp /root/go/bin/mhsendmail /usr/bin/mhsendmail
-RUN echo 'sendmail_path = /usr/bin/mhsendmail --smtp-addr mailhog:1025' > /usr/local/etc/php/php.ini
+# RUN apt-get update &&\
+#     apt-get install --no-install-recommends --assume-yes --quiet ca-certificates curl git &&\
+#     rm -rf /var/lib/apt/lists/*
+# RUN curl -Lsf 'https://storage.googleapis.com/golang/go1.8.3.linux-amd64.tar.gz' | tar -C '/usr/local' -xvzf -
+# ENV PATH /usr/local/go/bin:$PATH
+# RUN go get github.com/mailhog/mhsendmail
+# RUN cp /root/go/bin/mhsendmail /usr/bin/mhsendmail
+# RUN echo 'sendmail_path = /usr/bin/mhsendmail --smtp-addr mailhog:1025' > /usr/local/etc/php/php.ini
+
+RUN apt-get install -y libxrender1
 
 RUN docker-php-ext-install opcache
 COPY php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
