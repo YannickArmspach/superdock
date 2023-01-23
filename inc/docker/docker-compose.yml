@@ -42,6 +42,7 @@ services:
       #SUPERDOCK_V8JS: ${SUPERDOCK_V8JS}
 
   database:
+    platform: linux/x86_64
     image: ${SUPERDOCK_DATABASE}
     container_name: superdock_database
     restart: 'always'
