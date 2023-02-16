@@ -6,6 +6,7 @@ services:
     build:
       context: ./../
       dockerfile: ./docker/Dockerfile.php-${SUPERDOCK_PHP}.local
+    platform: linux/amd64
     container_name: superdock_webserver
     restart: 'always'
     stdin_open: true
@@ -42,8 +43,8 @@ services:
       #SUPERDOCK_V8JS: ${SUPERDOCK_V8JS}
 
   database:
-    platform: linux/x86_64
     image: ${SUPERDOCK_DATABASE}
+    platform: linux/amd64
     container_name: superdock_database
     restart: 'always'
     stdin_open: true
