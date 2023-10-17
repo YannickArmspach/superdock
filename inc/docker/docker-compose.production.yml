@@ -113,25 +113,25 @@ services:
     ports:
       - 8080:8080
 
-  # mailcatcher:
-  #   image: schickling/mailcatcher
-  #   container_name: superdock_mailcatcher
-  #   networks:
-  #     - superdock_network
-  #   ports:
-  #     - 1080:1080
-  #   expose:
-  #     - 1025
+  mailcatcher:
+    image: schickling/mailcatcher
+    container_name: superdock_mailcatcher
+    networks:
+      - superdock_network
+    ports:
+      - 1080:1080
+    expose:
+      - 1025
 
-  # redis:
-  #   image: redis
-  #   container_name: superdock_redis
-  #   networks:
-  #     - superdock_network
-  #   restart: 'always'
-  #   tty: true
-  #   ports:
-  #     - 6379
+  redis:
+    image: redis
+    container_name: superdock_redis
+    networks:
+      - superdock_network
+    restart: 'always'
+    tty: true
+    ports:
+      - 6379
 
   # mercure:
   #   image: dunglas/mercure
